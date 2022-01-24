@@ -1,0 +1,312 @@
+$body-bg: #353C48;
+$border-bg: #1A1B1E;
+
+$primary-color: #FFFFFF;
+$secondary-color: #707C8E;
+
+$sidebar-bg: #30333B;
+
+$panel-bg: #282A30;
+
+$white: #ffffff;
+$black: #000000;
+
+$red: #BF7A6A;
+$yellow: #D2A968;
+$green: #A9BD7A;
+$blue: #6FB4CE;
+$pale-yellow: #FFE99A;
+$pink: #F782AA;
+$purple: #8B5499;
+$orange: #FF9251;
+$violet: #597FC5;
+$purple: #C790E1;
+$peach: #FFCECD;
+$pale-green: #8CC197;
+$light-brown: #987345;
+$french-grey: #748844;
+
+/*  Border Radius  */
+@mixin border-radius($radius) {
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	border-radius: $radius;
+}
+
+
+// Users
+.users-wrapper {
+	padding: 0;
+	position: relative;
+	&.green {
+		border-top: 1px solid rgba(89, 196, 196, 0.6)
+	}
+	&.yellow {
+		border-top: 1px solid rgba(255, 197, 80, 0.6);
+	}
+	&.red {
+		border-top: 1px solid rgba(255, 144, 144, 0.6);
+	}
+	&.blue {
+		border-top: 1px solid rgba(18, 164, 244, 0.6);
+	}
+	.users-info {
+		padding: 15px;
+		.users-avatar {
+			width: 60px;
+			height: 60px;
+			float: left;
+			opacity: 0.8;
+			img {
+				-webkit-border-radius: 18px;
+				-moz-border-radius: 18px;
+				border-radius: 18px;
+			}
+		}
+		.users-detail {
+			margin-left: 75px;
+			h5 {
+				padding: 0;
+				margin: 12px 0 2px 0;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+			p {
+				margin: 0;
+				padding: 0;
+				font-size: 11px;
+				color: lighten($secondary-color, 10%);
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;				
+			}
+		}
+	}
+	ul.users-footer {
+		background: darken($body-bg, 6%);
+		li {
+			float: left;
+			width: 40%;
+			padding: 10px 10px 10px 15px; 
+			box-sizing: border-box;
+			border-left: 1px solid $body-bg;
+			&:first-child {
+				border-left: 0;
+			}
+			&:last-child {
+				width: 20%;
+				border-left: 0;
+			}
+			p {
+				margin: 0;
+				padding: 0;
+				color: lighten($secondary-color, 10%);
+				line-height: 100%;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				&.light {
+					margin: 0 0 5px 0;
+					font-size: 11px;
+					color: lighten($secondary-color, 20%);
+					font-style: italic;
+				}
+			}
+			.add-btn {
+				-webkit-transition: all 0.3s ease-in-out;
+				-moz-transition: all 0.3s ease-in-out;
+				-ms-transition: all 0.3s ease-in-out;
+				-o-transition: all 0.3s ease-in-out;
+				transition: all 0.3s ease-in-out;
+				float: right;
+				@include border-radius(30px);
+				background: $body-bg;
+				width: 30px;
+				height: 30px;
+				text-align: center;
+				display: block;
+				i {
+					-webkit-transition: all 0.3s ease-in-out;
+					-moz-transition: all 0.3s ease-in-out;
+					-ms-transition: all 0.3s ease-in-out;
+					-o-transition: all 0.3s ease-in-out;
+					transition: all 0.3s ease-in-out;					
+					color: $green;
+					font-size: 20px;
+					line-height: 30px;
+				}
+				&.added {
+					background: $green;
+					i {
+						color: $white;
+					}
+				}
+			}
+		}
+	}
+}
+
+// Cards
+.card-wrapper {
+	margin-bottom: 10px;
+	background: darken($body-bg, 5%);
+	border-top: 2px solid $yellow;
+	-webkit-transition: all 1s ease-in-out;
+	-moz-transition: all 1s ease-in-out;
+	-ms-transition: all 1s ease-in-out;
+	-o-transition: all 1s ease-in-out;
+	transition: all 1s ease-in-out;	
+	.card {
+		padding: 10px;
+		text-align: center;
+		position: relative;
+		width: 100%;
+		box-sizing: border-box;
+		color: lighten($secondary-color, 10%);
+		.card-type {
+			position: absolute;
+			right: 15px;
+			top: 0;
+			background-color: darken($body-bg, 7%);
+			color: lighten($secondary-color, 10%);
+			padding: 5px;
+			width: 36px;
+			&:after {
+				content: "";
+				position: absolute;
+				bottom: -8px;
+				left: 0;
+				border-top: 8px solid darken($body-bg, 7%);
+				border-right: 16px solid transparent;
+			}
+			&:before {
+				content: "";
+				position: absolute;
+				bottom: -8px;
+				right: 0;
+				border-top: 8px solid darken($body-bg, 7%);
+				border-left: 16px solid transparent;
+			}
+		}
+		.card-avatar {
+			width: 64px;
+			height: 64px;
+			margin: 30px auto;
+			border: 2px solid $pale-yellow;
+			@include border-radius(4px);
+			box-shadow: 0 0 1px rgba(0, 0, 0, 0.9);
+			opacity: 0.9;
+		}
+		h5 {
+			text-transform: uppercase;
+			font-size: 13px;
+			margin: 0 0 10px 0;
+			font-weight: 500;
+		}
+		p {
+			font-size: 14px;
+			margin: 0 0 10px 0;
+		}
+	}
+	ul.card-actions {
+		text-align: center;
+		li {
+			width: 40px;
+			margin: 0 5px 20px 5px;
+			display: inline-block;
+			.action-btn {
+				display: block;
+				width: 40px;
+				height: 40px;
+				line-height: 38px;
+				background: $body-bg;
+				@include border-radius(2px);
+				border: 1px solid darken($body-bg, 7%);
+				z-index: 1;
+				text-align: center;
+				color: $secondary-color;
+				i {
+					display: block;
+					font-size: 24px;
+					line-height: 38px;
+				}
+				&:hover {
+					box-shadow: 0 0 10px $black;
+				}
+			}
+		}
+	}
+	&.red {
+		border-top: 2px solid lighten($red, 5%);
+		.card-avatar {
+			border: 2px solid $red;
+		}
+	}
+	&.pink {
+		border-top: 2px solid lighten($pink, 10%);
+		.card-avatar {
+			border: 2px solid $pink;
+		}
+	}
+	&.blue {
+		border-top: 2px solid lighten($blue, 15%);
+		.card-avatar {
+			border: 2px solid $blue;
+		}
+	}
+	&.green {
+		border-top: 2px solid $green;
+		.card-avatar {
+			border: 2px solid $green;
+		}
+	}
+	&.violet {
+		border-top: 2px solid lighten($violet, 10%);
+		.card-avatar {
+			border: 2px solid $violet;
+		}
+	}
+	&.orange {
+		border-top: 2px solid lighten($orange, 9%);
+		.card-avatar {
+			border: 2px solid $orange;
+		}
+	}
+	&.peach {
+		border-top: 2px solid $peach;
+		.card-avatar {
+			border: 2px solid $peach;
+		}
+	}
+	&.purple {
+		border-top: 2px solid lighten($purple, 10%);
+		.card-avatar {
+			border: 2px solid $purple;
+		}
+	}
+	&.pale-green {
+		border-top: 2px solid lighten($pale-green, 10%);
+		.card-avatar {
+			border: 2px solid $pale-green;
+		}
+	}
+	&.light-brown {
+		border-top: 2px solid lighten($light-brown, 10%);
+		.card-avatar {
+			border: 2px solid $light-brown;
+		}
+	}
+	&.french-grey {
+		border-top: 2px solid lighten($french-grey, 10%);
+		.card-avatar {
+			border: 2px solid $french-grey;
+		}
+	}
+	&.pale-yellow {
+		border-top: 2px solid lighten($pale-yellow, 5%);
+		.card-avatar {
+			border: 2px solid $pale-yellow;
+		}
+	}
+}

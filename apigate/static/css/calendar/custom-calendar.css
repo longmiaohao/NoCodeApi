@@ -1,0 +1,424 @@
+hr.stylish {
+	border-top: 1px solid #2A3039;
+}
+.create-event-container{
+	background: #2A3039;
+	padding: 15px;
+	margin-bottom: 10px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+.create-event-container .btn{
+	padding: 9px 10px;
+}
+.created-events {
+	background: #2A3039;
+	padding: 15px;
+	margin-bottom: 10px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+.created-events .fc-event{
+	display: block;
+	margin: 0 0 5px 0;
+}
+h5.event-title{
+	margin: 0 0 10px 0;
+	font-size: 15px;
+	padding: 0 0 5px 0;
+	border-bottom: 1px dashed #2A3039;
+	color: #707C8E;
+}
+.event-tag span {
+	width: 20px;
+	height: 20px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	float: left;
+	margin: 0 3px 3px 0;
+	position: relative;
+	cursor: pointer;
+	opacity: 0.3;
+}
+.event-tag span.selected{
+	opacity: 1;
+}
+.event-tag span.selected:before {
+	width: 13px;
+	height: 13px;
+	top: 2px;
+	left: 4px;
+	font-size: 12px;
+	color: #fff;
+	position: absolute;
+	content: "\eb38";
+	font-family: 'icomoon';
+}
+.new-event-form {
+	height: 40px;
+	border: 2px solid #629CB2;
+	background: #2A3039;
+	color: #ffffff;
+	z-index: 0;
+}
+
+.fc-event.fc-draggable, .fc-event[href] {
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-ms-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+}
+
+.fc-calendar {
+	background: #2A3039;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.fc-calendar .fc-toolbar {
+	color: #707C8E;
+	padding: 20px;
+	margin: 0;
+	position: relative;
+	border-radius: 4px 4px 0 0;
+	-webkit-border-radius: 4px 4px 0 0;
+	-moz-border-radius: 4px 4px 0 0;
+	border-bottom: 0;
+	background: #2A3039;
+	background-color: #2A3039;
+}
+.fc-unthemed .fc-today {
+	background: #6FB4CE;
+	opacity: 0.4;
+}
+.fc-unthemed .fc-divider, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead{
+	border-color: #353C48;
+}
+.fc-unthemed .fc-popover {
+	background: #353C48;
+}
+.fc-icon-x:after {
+	color: #6FB4CE;
+}
+.fc-popover .fc-header .fc-title {
+	font-size: 15px;
+}
+
+.fc-toolbar .fc-center {
+	float: left;
+}
+.fc-calendar .fc-toolbar .fc-center h2 {
+	font-size: 20px;
+	padding: 12px 0;
+	margin-bottom: 15px;
+	font-weight: 100;
+	text-transform: uppercase;
+	color: #629CB2;
+}
+@media (max-width: 767px) {
+	.fc-calendar .fc-toolbar .fc-center h2 {
+		margin-bottom: 15px;
+	}
+}
+.fc-calendar .fc-toolbar .fc-prev-button, .fc-calendar .fc-toolbar .fc-next-button {
+	position: absolute;
+	background: transparent;
+	border: none;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	text-shadow: none;
+	color: #A26D62;
+	font-size: 16px;
+	text-transform: uppercase;
+	font-weight: 400;
+}
+
+.fc-calendar .fc-toolbar .fc-next-button {
+	right: 15px;
+}
+
+.fc-calendar .fc-toolbar .fc-prev-button {
+	right: 50px;
+}
+
+.fc-calendar .fc-toolbar .fc-right {
+	position: absolute;
+	bottom: 15px;
+	right: 20px;
+}
+
+.fc-calendar .fc-toolbar .fc-right button {
+	background: transparent;
+	border: none;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	text-shadow: none;
+	font-size: 13px;
+	text-transform: uppercase;
+	font-weight: 400;
+}
+.fc-today-button {
+	color: #6FB4CE;
+	opacity: 0.3;
+}
+.fc-month-button {
+	color: #BF7A6A
+}
+.fc-agendaWeek-button {
+	color: #D2A968;
+}
+.fc-agendaDay-button {
+	color: #A9BD7A;
+}
+
+.fc-calendar .fc-day-header {
+	text-transform: uppercase;
+	font-weight: 500;
+	padding: 10px 5px;
+	font-size: 14px;
+	text-align: right;
+	color: #707C8E;
+	font-style: normal;
+}
+@media (max-width: 767px) {
+	.fc-calendar .fc-day-header {
+		padding: 5px;
+		font-size: 12px;
+	}
+}
+.fc table {
+	font-size: 18px;
+	font-weight: 300;
+	color: #6B7991;
+	font-style: italic;
+}
+@media (max-width: 767px) {
+	.fc table {
+		font-size: 14px;
+		font-weight: 600;
+	}
+}
+.fc-basic-view td.fc-day-number, .fc-basic-view td.fc-week-number span {
+	padding: 6px;
+}
+@media (max-width: 767px) {
+	.fc-basic-view td.fc-day-number, .fc-basic-view td.fc-week-number span {
+		padding: 2px;
+	}
+}
+.fc-basic-view .fc-day-number, .fc-basic-view .fc-week-number {
+	padding: 6px;
+}
+.fc-event {
+	border: 0;
+	padding: 5px 10px;
+	font-size: 12px;
+	margin: 2px 5px;
+	border-radius: 0;
+	cursor: move;
+	font-weight: 400;
+	font-style: normal;
+}
+@media (max-width: 767px) {
+	.fc-event {
+		padding: 2px 8px;
+	}
+}
+.external-events form .form-group {
+	width: 100%;
+	margin-bottom: 5px;
+}
+
+.external-events form .input-group {
+	width: 100%;
+}
+
+.external-events form .input-group input {
+	border-right: 0;
+}
+.external-events form .input-group input::-webkit-input-placeholder {
+	color: #707C8E;
+}
+.external-events form .input-group input:-moz-placeholder {
+	color: #707C8E;
+}
+.external-events form .input-group input::-moz-placeholder {
+	color: #707C8E;
+}
+.external-events form .input-group input:-ms-input-placeholder {  
+	color: #707C8E;
+}
+
+.external-events form .input-group input:focus {
+	border: 2px solid #6fb4ce;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.external-events form .input-group-addon {
+	background: #fff;
+}
+
+.external-events .remove-event {
+	float: right;
+	cursor: pointer;
+}
+
+
+.fc-toolbar button:focus {
+	outline: none;
+}
+.fc-unthemed .fc-divider, .fc-unthemed .fc-popover .fc-header {
+	background: #353C48;
+}
+.fc-popover .fc-header {
+	padding: 7px 14px;
+}
+
+a.fc-more {
+	position: relative;
+	display: block;
+	font-size: 12px;
+}
+@media (max-width: 767px) {
+	a.fc-more {
+		display: none;
+	}
+}
+a.fc-more:after {
+	content: "";
+	position: absolute;
+	vertical-align: middle;
+	width: 11px;
+	height: 20px;
+	background: url("../../img/sprite.png");
+	background-position: -6px -2px;
+}
+
+.ui-draggable {
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-ms-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+}
+
+.red-bg {
+  background: #BF7A6A; }
+
+.pink-bg {
+  background: #BD758E; }
+
+.yellow-bg {
+  background: #D2A968; }
+
+.blue-bg {
+  background: #6FB4CE; }
+
+.green-bg {
+  background: #A9BD7A; }
+
+.orange-bg {
+  background: #ff9966; }
+
+.fb-bg {
+  background: #6580B9; }
+
+.tw-bg {
+  background: #55acee; }
+
+.gplus-bg {
+  background: #e02f2f; }
+
+.linkedin-bg {
+  background: #007bb5; }
+
+.purple-bg {
+  background: #c790e1; }
+
+.violet-bg {
+  background: #597fc5; }
+
+.primary-light-bg {
+  background: #eff6fb; }
+
+.primary-dark-bg {
+  background: #cee4f3; }
+
+.light-pink-bg {
+  background: #fef0f5; }
+
+.light-yellow-bg {
+  background: #ffefd0; }
+
+.fc-event.red-bg{
+	background: rgba(162, 109, 98, 0.3);
+  border-left: 2px solid rgb(162, 109, 98);
+	color: #fff;
+}
+.fc-event.green-bg{
+	background: rgba(145, 163, 111, 0.3);
+	border-left: 2px solid rgb(145, 163, 111);
+	color: #fff;
+}
+.fc-event.blue-bg{
+	background: rgba(98, 156, 178, 0.3);
+	border-left: 2px solid rgb(98, 156, 178);
+	color: #fff;
+}
+.fc-event.yellow-bg{
+	background: rgba(255, 235, 59, 0.2);
+	border-left: 2px solid #FFC107;
+	color: #fff;
+}
+.fc-event.orange-bg{
+	background: rgba(255, 147, 92, 0.3);
+	border-left: 2px solid rgb(255, 139, 81);
+	color: #fff;
+}
+.fc-event.purple-bg{
+	background: rgba(199, 144, 225, 0.3);
+	border-left: 2px solid rgba(199, 144, 225, 1);
+	color: #fff;
+}
+.fc-event.pink-bg{
+	background: rgba(247, 130, 170, 0.3);
+	border-left: 2px solid rgba(247, 130, 170, 1);
+	color: #fff;
+}
+.fc-event.tw-bg{
+	background: rgba(85, 172, 238, 0.3);
+	border-left: 2px solid rgba(85, 172, 238, 1);
+	color: #fff;
+}
+.fc-event.fb-bg{
+	background: rgba(59, 89, 152, 0.54);
+	border-left: 2px solid rgb(86, 135, 239);
+	color: #fff;
+}
+.fc-event.orange-bg{
+	background: rgba(255, 153, 102, 0.3);
+	border-left: 2px solid rgba(255, 153, 102, 1);
+	color: #fff;
+}
+
+
+.fc-other-month {
+	background-size: 8px 8px;
+	background: url(../../img/grid-sm.png) repeat;
+	opacity: 0.1;
+}
+.fc-view, .fc-view > table {
+	padding: 0px 20px 20px 20px;
+}
+.fc td.fc-today {
+	color: #fff;
+}

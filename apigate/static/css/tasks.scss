@@ -1,0 +1,214 @@
+$body-bg: #353C48;
+$border-bg: #1A1B1E;
+
+$primary-color: #FFFFFF;
+$secondary-color: #707C8E;
+
+$sidebar-bg: #30333B;
+
+$panel-bg: #282A30;
+
+$white: #ffffff;
+$black: #000000;
+
+$red: #BF7A6A;
+$yellow: #D2A968;
+$green: #A9BD7A;
+$blue: #6FB4CE;
+
+
+/* Tasks */
+.task-wrapper {
+	background-color: darken($body-bg, 5%);
+	padding: 15px;
+	margin-bottom: 10px;
+	h4.task-name {
+		margin: 0 0 10px 0;
+		padding: 0 0 10px 0;
+		border-bottom: 1px dashed lighten($body-bg, 10%);
+		span {
+			text-align: right;
+			font-weight: 500;
+		}
+	}
+}
+
+/* Task Drag and Drop */
+.drag-your-task {
+	padding: 30px 15px;
+	border: 1px dashed lighten($body-bg, 10%);
+	background-color: transparent;
+	text-align: center;
+	color: $secondary-color;
+	i {
+		font-size: 20px;
+		color: $secondary-color;
+		border-radius: 30px;
+		line-height: 28px;
+		padding: 6px;
+		width: 32px;
+		height: 32px;
+		border: 2px solid lighten($body-bg, 10%);
+	}
+	h4 {
+		font-size: 16px;
+		margin: 10px 0 0 0;
+		padding: 0;
+		font-weight: 500;
+		line-height: 20px;
+	}
+}
+
+// Add Task
+.add-task-btn {
+	padding: 6px 15px;
+	border: 1px dashed lighten($body-bg, 10%);
+	background-color: transparent;
+	text-align: center;
+	color: $green;
+	display: block;
+	font-size: 14px;
+	margin-top: 10px;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-ms-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+	i {
+		font-size: 14px;
+		text-align: left;
+		margin-right: 7px;
+	}
+	&:hover {
+		background-color: $body-bg;
+		color: $green;
+		border: 1px dashed $green;
+	}
+}
+
+.task-block {
+	padding: 15px 10px 5px 10px;
+	background-color: $body-bg;
+	border-left: 2px solid darken($body-bg, 5%);
+	box-sizing: border-box;
+	display: block;
+	margin-bottom: 7px;
+	position: relative;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-ms-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+	&.critical {
+		border-left: 2px solid rgba(255, 144, 144, 0.6);
+		i {
+			color: $red;
+		}
+	}
+	&.bug {
+		border-left: 2px solid rgba(255, 197, 80, 0.6);
+		i{
+			color: $yellow;
+		}
+	}
+	&.complete {
+		border-left: 2px solid rgba(89, 196, 196, 0.6);
+		i {
+			color: $green;
+		}
+	}
+	&.new {
+		border-left: 2px solid rgba(18, 164, 244, 0.5);
+		i{
+			color: $blue;
+		}
+	}
+	&:hover {
+		background-color: lighten($body-bg, 5%);
+		cursor: move;
+	}
+	h5.task-id {
+		margin: 0 0 7px 0;
+		padding: 0;
+		font-size: 13px;
+		text-transform: uppercase;
+		color: lighten($secondary-color, 10%);
+		i{
+			margin-left: 5px;
+			font-size: 10px;
+		}
+	}
+	.assigned-user {
+		width: 48px;
+		height: 48px;
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		opacity: 0.9;
+		img {
+			border: 0;
+			width: 48px;
+			height: 48px;
+			-webkit-border-radius: 3px;
+			-moz-border-radius: 3px;
+			border-radius: 3px;
+		}
+	}
+	p.task-desc {
+		margin: 0;
+		padding: 0 0 4px 0;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		color: lighten($secondary-color, 10%);
+	}
+	.task-type {
+		padding: 0 8px;
+		position: absolute;
+		right: 10px;
+		bottom: 7px;
+		background-color: lighten($body-bg, 10%);
+		font-size: 11px;
+		color: lighten($body-bg, 50%);
+		line-height: 16px;
+		&:after {
+			content: "";
+			position: absolute;
+			width: 0;
+			height: 0;
+			left: -7px;
+			top: 0;
+			border-right: 7px solid lighten($body-bg, 10%);
+			border-bottom: 7px solid transparent;
+		}
+		&:before {
+			content: "";
+			position: absolute;
+			width: 0;
+			height: 0;
+			left: -7px;
+			bottom: 0;
+			border-right: 7px solid lighten($body-bg, 10%);
+			border-top: 7px solid transparent;
+		}
+	}
+	ul.task-footer {
+		margin: 3px 0 0 0;
+		padding: 0;
+		list-style-type: none;
+		font-size: 11px;
+		color: lighten($secondary-color, 10%);
+		li{
+			margin-right: 15px;
+			display: inline-block;
+		}
+	}
+	&:hover {
+		color: $black;
+	}
+}
+
+.progress {
+	margin-bottom: 0;
+	background: lighten($body-bg, 5%);
+}

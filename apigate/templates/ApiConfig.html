@@ -1,0 +1,658 @@
+<!-- Data Tables -->
+<link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+<link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+<link rel="stylesheet" href="/static/css/bootstrap-switch.min.css">
+<link rel="stylesheet" href="/static/css/BeAlert.css">
+<link href="https://cdn.bootcdn.net/ajax/libs/jsoneditor/9.1.5/jsoneditor.css" rel="stylesheet">
+<link href="https://cdn.bootcdn.net/ajax/libs/jsoneditor/9.1.5/jsoneditor.min.css" rel="stylesheet">
+<style type="text/css">
+    div.jsoneditor-value.jsoneditor-string {
+        color: whitesmoke;
+    }
+
+    .jsoneditor-contextmenu {
+        z-index: 3;
+    }
+</style>
+<!-- Dashboard Wrapper Start -->
+<div class="dashboard-wrapper dashboard-wrapper-lg">
+    <!-- Container fluid Starts -->
+    <div class="container-fluid">
+        <!-- Top Bar Starts -->
+        <div class="top-bar clearfix">
+            <div class="row gutter">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="page-title">
+                        <h3>API接口配置</h3>
+                        <p>接口配置 / <a href="{% url "api_view_ApiConfig" %}">接口</a> / <a
+                                href="{% url "api_view_ApiConfig" %}">接口配置</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Row Starts -->
+        <div class="row gutter">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="panel panel-blue">
+                    <div class="panel-heading" style="border-bottom: 1px solid whitesmoke;">
+                        <h3 class="text-success">所有接口</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="toolbar"></div>
+                        <table id="table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Row Ends -->
+    </div>
+    <!-- Container fluid ends -->
+</div>
+<!-- Dashboard Wrapper End -->
+<!-- add模态框（Modal） -->
+<div class="modal fade" id="addmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 80%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×
+                </button>
+                <h4 class="modal-title" id="modal_title">
+                    新增接口
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="bs-example bs-example-form" role="form">
+                    <div class="input-group">
+                        <span class="input-group-addon">名称</span>
+                        <input type="text" class="form-control" name="name" id="name" autocomplete="off" value="test">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">路径</span>
+                        <input type="text" class="form-control" name="path" id="path" autocomplete="off" value="test">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">允许方式</span>
+                        <select class="form-control" name="allow_method" id="allow_method">
+                            <option value="ALL" selected>全部</option>
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">允许IP</span>
+                        <input type="text" class="form-control" name="allow_ip" id="allow_ip" value="*">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">数据库</span>
+                        <select class="form-control" name="db" id="db">
+                            <option></option>
+                            {% for var in database_list %}
+                                <option value="{{ var.NAME }}">{{ var.NAME }}-{{ var.DB }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">数据表</span>
+                        <select class="form-control" name="data_table" id="data_table"></select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">自定义SQL</span>
+                        <textarea class="form-control" name="sql" id="sql"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">排序</span>
+                        <textarea class="form-control" name="sort" id="sort"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">条件</span>
+                        <div name="condition" id="condition" style="height: 200px;background-color: cadetblue"></div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">字段别名</span>
+                        <textarea class="form-control" name="alias_fields" id="alias_fields"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">返回当前表</span>
+                        <select class="form-control" name="return_table" id="return_table">
+                            <option value="1" selected>是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">返回字段</span>
+                        <textarea class="form-control" name="return_fields" id="return_fields"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">INSERT</span>
+                        <select class="form-control" name="insert_status" id="insert_status">
+                            <option value="1">是</option>
+                            <option value="0" selected>否</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">INSERT字段</span>
+                        <textarea class="form-control" name="insert_field" id="insert_field"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">DELETE</span>
+                        <select class="form-control" name="delete_status" id="delete_status">
+                            <option value="1">是</option>
+                            <option value="0" selected>否</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">DELETE字段</span>
+                        <textarea class="form-control" name="delete_field" id="delete_field"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">UPDATE</span>
+                        <select class="form-control" name="update_status" id="update_status">
+                            <option value="1">是</option>
+                            <option value="0" selected>否</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">UPDATE字段</span>
+                        <div name="update_field" id="update_field" style="height: 200px; background-color: cadetblue"></div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">返回字段说明</span>
+                        <select class="form-control" name="return_field_comment" id="return_field_comment">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">每页条数</span>
+                        <input type="text" class="form-control" name="per_page" id="per_page" value="全部"/>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">返回记录数量</span>
+                        <select class="form-control" name="return_total" id="return_total">
+                            <option value="1">是</option>
+                            <option value="0" selected>否</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">启用状态</span>
+                        <select class="form-control" name="status" id="status">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                    <input id="optype" hidden>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" onclick="add()">
+                    提交保存
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- add模态框完（Modal） -->
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/bootstrap-table.min.js"></script>
+<script src="/static/js/bootstrap-switch.min.js"></script>
+<script src="/static/js/bootstrap-table-locale-all.min.js"></script>
+<script src="/static/js/BeAlert.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jsoneditor/9.1.5/jsoneditor-minimalist.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jsoneditor/9.1.5/jsoneditor-minimalist.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jsoneditor/9.1.5/jsoneditor.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jsoneditor/9.1.5/jsoneditor.min.js"></script>
+<script type="application/javascript">
+
+    let editor_update_field; // 更新字段json编辑器
+    let editor_condition; // 条件字段json编辑器
+    $(function () {
+        $('#table').bootstrapTable({
+            method: 'get',
+            locale: 'zh-CN',//中文支持,
+            search: true,
+            contentType: "application/x-www-form-urlencoded",//必须要有！！！！
+            url: "{% url "api_view_ApiList" %}",//要请求数据的文件路径
+            // height:tableHeight(),//高度调整
+            toolbar: '#toolbar',//指定工具栏
+            striped: true, //是否显示行间隔色
+            dataField: "rows",//bootstrap table 可以前端分页也可以后端分页，这里
+            pageNumber: 1, //初始化加载第一页，默认第一页
+            pagination: true,//是否分页
+            sidePagination: 'client',//指定前端分页
+            pageSize: 10,//单页记录数
+            showColumns: false,
+            clickToSelect: true,//是否启用点击选中行
+            toolbarAlign: 'right', //工具栏对齐方式
+            buttonsAlign: 'right',//按钮对齐方式
+            columns: [
+                {
+                    title: '全选',
+                    field: 'select',
+                    //复选框
+                    checkbox: true,
+                    width: 25,
+                    align: 'center',
+                    valign: 'middle'
+                },
+                {
+                    title: '名称',
+                    field: 'NAME',
+                },
+                {
+                    title: '地址',
+                    field: 'URL',
+                },
+                {
+                    title: '允许方式',
+                    field: 'ALLOW_METHOD',
+                },
+                {
+                    title: '允许IP',
+                    field: 'ALLOW_IP',
+                },
+                {
+                    title: '数据库',
+                    field: 'TARGET_DB',
+                },
+                {
+                    title: '数据表',
+                    field: 'TARGET_TABLE_OR_VIEW',
+                },
+                {
+                    title: '自定义SQL',
+                    field: 'EXECUTE_SQL',
+                },
+                {
+                    title: '返回当前表',
+                    field: 'RETURN_TARGET_TABLE_OR_VIEW',
+                },
+                {
+                    title: '返回字段说明',
+                    field: 'RETURN_FIELD',
+                },
+                {
+                    title: '每页数量',
+                    field: 'PER_PAGE',
+                },
+                {
+                    title: '创建时间',
+                    field: 'CREATE_TIME',
+                },
+                {
+                    title: '启用状态',
+                    field: 'STATUS',
+                },
+                {
+                    title: '操作',
+                    field: 'OP',
+                },
+            ],
+            responseHandler: function (res) {
+                let data = {};
+                data.total = res.DATA.length;
+                res = res.DATA;
+                if (res.length > 0) {
+                    for (let i = 0; i < res.length; i++) {
+                        res[i].OP = "<a onclick=\"edit(this, '" + res[i].NAME + "\')\"><button type=\"button\" class=\"btn btn-sm btn-info\" id='edit_btn'>编辑</button></a>\n";
+                        res[i].OP += "<a onclick=\"del(this, '" + res[i].NAME + "\')\"><button type=\"button\" class=\"btn btn-sm btn-danger\" id='del_btn'>删除</button></a>\n";
+                        if (res[i].STATUS == 1)
+                            res[i].STATUS = "<input type='checkbox' name='qyzt_switch' checked value='" + res[i].NAME + "'>";
+                        else
+                            res[i].STATUS = "<input type='checkbox' name='qyzt_switch' value='" + res[i].NAME + "'>";
+                        if (res[i].RETURN_FIELD == 1)
+                            if (res[i].EXECUTE_SQL)
+                                res[i].RETURN_FIELD = "<input type='checkbox' name='return_field_switch' checked value='" + res[i].NAME + "' disabled>";
+                            else
+                                res[i].RETURN_FIELD = "<input type='checkbox' name='return_field_switch' checked value='" + res[i].NAME + "'>";
+                        else if (res[i].EXECUTE_SQL)
+                            res[i].RETURN_FIELD = "<input type='checkbox' name='return_field_switch' value='" + res[i].NAME + "' disabled>";
+                        else
+                            res[i].RETURN_FIELD = "<input type='checkbox' name='return_field_switch' value='" + res[i].NAME + "'>";
+                        if (res[i].RETURN_TARGET_TABLE_OR_VIEW == 1)
+                            if (res[i].EXECUTE_SQL)
+                                res[i].RETURN_TARGET_TABLE_OR_VIEW = "<input type='checkbox' name='return_target_table_or_view_switch' checked value='" + res[i].NAME + "' disabled>";
+                            else
+                                res[i].RETURN_TARGET_TABLE_OR_VIEW = "<input type='checkbox' name='return_target_table_or_view_switch' checked value='" + res[i].NAME + "'>";
+                        else if (res[i].EXECUTE_SQL)
+                            res[i].RETURN_TARGET_TABLE_OR_VIEW = "<input type='checkbox' name='return_target_table_or_view_switch' value='" + res[i].NAME + "' disabled>";
+                        else
+                            res[i].RETURN_TARGET_TABLE_OR_VIEW = "<input  type='checkbox' name='return_target_table_or_view_switch' value='" + res[i].NAME + "'>";
+                    }
+                }
+                data.rows = res;
+                return data;
+            },
+            onAll: function () {
+                $('input[name="qyzt_switch"]').bootstrapSwitch({
+                    onText: "启用",      // 设置ON文本
+                    offText: "禁用",    // 设置OFF文本
+                    onColor: "success",// 设置ON文本颜色(info/success/warning/danger/primary)
+                    offColor: "danger",  // 设置OFF文本颜色 (info/success/warning/danger/primary)
+                    size: "small",    // 设置控件大小,从小到大  (mini/small/normal/large)
+                    onSwitchChange: function (event, status) {
+                        if (status === true)
+                            status = 1
+                        else
+                            status = 0
+                        let name = event.target.value;
+                        $.ajax({
+                            url: "{% url "api_view_ChangeStatus" %}",
+                            type: "post",
+                            data: {
+                                "type": "api_qyzt",
+                                "name": name.toLocaleString(),
+                                "status": status,
+                                "csrfmiddlewaretoken": "{{ csrf_token }}"
+                            },
+                            success: function (res) {
+                                alert("成功", res.RTN_MSG, () => {
+                                }, {type: 'success', confirmButtonText: '确定'});
+                                refresh_data();
+                            },
+                            error: function (res) {
+                                console.log(res)
+                                alert("失败", res.RTN_MSG, () => {
+                                }, {type: 'error', confirmButtonText: '确定'});
+                            }
+                        })
+                    }
+                })
+                $('input[name="return_field_switch"]').bootstrapSwitch({
+                    onText: "启用",      // 设置ON文本
+                    offText: "禁用",    // 设置OFF文本
+                    onColor: "success",// 设置ON文本颜色(info/success/warning/danger/primary)
+                    offColor: "danger",  // 设置OFF文本颜色 (info/success/warning/danger/primary)
+                    size: "small",    // 设置控件大小,从小到大  (mini/small/normal/large)
+                    onSwitchChange: function (event, status) {
+                        if (status === true)
+                            status = 1
+                        else
+                            status = 0
+                        let name = event.target.value;
+                        $.ajax({
+                            url: "{% url "api_view_ChangeStatus" %}",
+                            type: "post",
+                            data: {
+                                "type": "return_field",
+                                "name": name.toLocaleString(),
+                                "status": status,
+                                "csrfmiddlewaretoken": "{{ csrf_token }}"
+                            },
+                            success: function (res) {
+                                alert("成功", res.RTN_MSG, () => {
+                                }, {type: 'success', confirmButtonText: '确定'});
+                                refresh_data();
+                            },
+                            error: function (res) {
+                                console.log(res)
+                                alert("失败", res.RTN_MSG, () => {
+                                }, {type: 'error', confirmButtonText: '确定'});
+                            }
+                        })
+                    }
+                })
+                $('input[name="return_target_table_or_view_switch"]').bootstrapSwitch({
+                    onText: "启用",      // 设置ON文本
+                    offText: "禁用",    // 设置OFF文本
+                    onColor: "success",// 设置ON文本颜色(info/success/warning/danger/primary)
+                    offColor: "danger",  // 设置OFF文本颜色 (info/success/warning/danger/primary)
+                    size: "small",    // 设置控件大小,从小到大  (mini/small/normal/large)
+                    onSwitchChange: function (event, status) {
+                        if (status === true)
+                            status = 1
+                        else
+                            status = 0
+                        let name = event.target.value;
+                        $.ajax({
+                            url: "{% url "api_view_ChangeStatus" %}",
+                            type: "post",
+                            data: {
+                                "type": "return_target_table_or_view",
+                                "name": name.toLocaleString(),
+                                "status": status,
+                                "csrfmiddlewaretoken": "{{ csrf_token }}"
+                            },
+                            success: function (res) {
+                                alert("成功", res.RTN_MSG, () => {
+                                }, {type: 'success', confirmButtonText: '确定'});
+                                refresh_data();
+                            },
+                            error: function (res) {
+                                console.log(res)
+                                alert("失败", res.RTN_MSG, () => {
+                                }, {type: 'error', confirmButtonText: '确定'});
+                            }
+                        })
+                    }
+                })
+            }
+        })
+        $(".fixed-table-toolbar").append('<div class="pull-left search input-group" onclick="show_modal()"><button  style="height: 30px" class="btn btn-success btn-sm"title="添加配置" data-toggle="modal" ><i class="glyphicon glyphicon-plus"></i></button></div>')
+        $("[data-toggle='tooltip']").tooltip();
+        $("#db").change(function () {
+            if ($("#db").val() === "") {
+                return
+            }
+            $.post("{% url "api_view_GetTablesByDB" %}", {
+                "name": $("#db").val(),
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            }, function (res) {
+                let opt = ""
+                for (let i = 0; i < res.DATA.length; i++) {
+                    opt += "<option value='" + res.DATA[i].TABLE_NAME + "'> " + res.DATA[i].TABLE_NAME + ' - ' + res.DATA[i].TABLE_COMMENT + "</option>"
+                }
+                $("#data_table").html(opt)
+            })
+        })
+
+        let container_condition = document.getElementById("condition");
+        let options_condition = {mode: 'tree'};
+        editor_condition = new JSONEditor(container_condition, options_condition);
+
+        let container_update_field = document.getElementById("update_field");
+        let options_update_field = {mode: 'tree'};
+        editor_update_field = new JSONEditor(container_update_field, options_update_field);
+    })
+
+    function show_modal() {
+        $("#optype").val("add")
+        $("#name").removeAttr("disabled")
+        $("#name").val('')
+        $("#path").val('')
+        $("#allow_method").val('')
+        $("#allow_ip").val('')
+        $("#db").val('')
+        $("#data_table").val('')
+        $("#sql").val('')
+        $("#per_page").val('')
+        $("#sort").val('')
+        $("#condition").val('')
+        $("#alias_fields").val('')
+        $("#insert_field").val('')
+        $("#delete_field").val('')
+        $("#update_field").val('')
+        $("#return_fields").val('')
+        $("#return_total").val('')
+        $("#modal_title").html("添加接口")
+        editor_condition.set({})
+        editor_update_field.set({"UPDATE_FIELDS":{}, "CONDITION_FIELDS": {}})
+        $("#addmodal").modal("show")
+    }
+
+    function edit(obj, name) {
+        $.get("{% url "api_view_ApiList" %}", {
+            "name": name,
+            "csrfmiddlewaretoken": "{{ csrf_token }}"
+        }, function (res) {
+            if (res.RTN_CODE == '1') {
+                res = res.DATA[0]
+                $("#name").val(res.NAME)
+                $("#path").val(res.URL)
+                $("#allow_ip").val(res.ALLOW_IP)
+                $("#sql").val(res.EXECUTE_SQL)
+                $("#sort").val(res.SORT)
+                {#$("#condition").val(JSON.stringify(JSON.parse(res.CONDITION), null, 2));#}
+                if (res.CONDITION != '')
+                    editor_condition.set(JSON.parse(res.CONDITION));
+                else
+                    editor_condition.set({});
+                {#$('#condition').jsonEditor(res.CONDITION, { change: function (rdata) {$('#condition').val(JSON.stringify($("#condition").val())); }});　　#}
+
+                $("#alias_fields").val(res.ALIAS_FIELDS)
+                $("#insert_field").val(res.INSERT_FIELDS)
+                $("#delete_field").val(res.DELETE_FIELDS)
+                if (res.UPDATE_FIELDS != '')
+                    editor_update_field.set(JSON.parse(res.UPDATE_FIELDS));
+                else
+                    editor_update_field.set({});
+                $("#return_fields").val(res.RETURN_FIELDS)
+                $("#per_page").val(res.PER_PAGE === 'ALL' ? '全部' : res.PER_PAGE)
+                $("#return_total option[value=\"" + res.RETURN_TOTAL + "\"]")[0].selected = true
+                $("#insert_status option[value=\"" + res.INSERT_STATUS + "\"]")[0].selected = true
+                $("#delete_status option[value=\"" + res.DELETE_STATUS + "\"]")[0].selected = true
+                $("#update_status option[value=\"" + res.UPDATE_STATUS + "\"]")[0].selected = true
+                $("#allow_method option[value=\"" + res.ALLOW_METHOD + "\"]")[0].selected = true
+                $("#return_table option[value=\"" + res.RETURN_TARGET_TABLE_OR_VIEW + "\"]")[0].selected = true
+                $("#return_field_comment option[value=\"" + res.RETURN_FIELD + "\"]")[0].selected = true
+                $("#status option[value=\"" + res.STATUS + "\"]")[0].selected = true
+                $("#db option[value=\"" + res.TARGET_DB_NAME + "\"]")[0].selected = true
+                $.post("{% url "api_view_GetTablesByDB" %}", {
+                    "name": res.TARGET_DB_NAME,
+                    "csrfmiddlewaretoken": "{{ csrf_token }}"
+                }, function (data) {
+                    let opt = ""
+                    console.log(data)
+                    for (let i = 0; i < data.DATA.length; i++) {
+                        if (res.TARGET_TABLE_OR_VIEW === data.DATA[i].TABLE_NAME)
+                            opt += "<option selected value='" + data.DATA[i].TABLE_NAME + "'> " + data.DATA[i].TABLE_NAME + ' - ' + data.DATA[i].TABLE_COMMENT + "</option>"
+                        else
+                            opt += "<option value='" + data.DATA[i].TABLE_NAME + "'> " + data.DATA[i].TABLE_NAME + ' - ' + data.DATA[i].TABLE_COMMENT + "</option>"
+                    }
+                    $("#data_table").html(opt)
+                })
+            } else {
+                console.log(res)
+                alert(res.RTN_MSG)
+            }
+        })
+        $("#optype").val("edit")
+        $("#name").attr("disabled", "true")
+        $("#modal_title").html("编辑接口")
+        $("#addmodal").modal("show")
+    }
+
+    function add() {
+        let name = $("#name").val()
+        let path = $("#path").val()
+        let allow_method = $("#allow_method").val()
+        let allow_ip = $("#allow_ip").val()
+        let db = $("#db").val()
+        let data_table = $("#data_table").val()
+        let sql = $("#sql").val()
+        let per_page = $("#per_page").val()
+        let alias_fields = $("#alias_fields").val()
+        let return_fields = $("#return_fields").val()
+        let return_total = $("#return_total").val()
+        if (per_page === "全部" || per_page === "ALL")
+            per_page = 'ALL'
+        if (sql !== "")
+            alert("警告", "自定义SQL的时候，返回当前表和返回字段信息不可用", () => {
+            }, {type: 'warning', confirmButtonText: '确定'});
+        let return_table = $("#return_table").val()
+        let return_field_comment = $("#return_field_comment").val()
+        let status = $("#status").val()
+        let sort = $("#sort").val()
+        let condition = editor_condition.get()==''?'{}':JSON.stringify(editor_condition.get())
+        let delete_status = $("#delete_status").val()
+        let update_status = $("#update_status").val()
+        let insert_status = $("#insert_status").val()
+        let insert_field = $("#insert_field").val()
+        let update_field = editor_update_field.get()==''?'{}':JSON.stringify(editor_update_field.get())
+        let delete_field = $("#delete_field").val()
+        let msg = "确认添加?"
+        if ($("#optype").val() === "edit") {
+            msg = "确认修改?"
+        }
+        console.log(condition)
+        console.log(update_field)
+        confirm("提醒", msg, function (isConfirm) {
+            if (isConfirm) {
+                $.post("{% url "api_view_ApiConfig" %}", {
+                        "alias_fields": alias_fields,
+                        "condition": condition,
+                        "sort": sort,
+                        "optype": $("#optype").val(),
+                        "name": name,
+                        "path": path,
+                        "allow_method": allow_method,
+                        "allow_ip": allow_ip,
+                        "db": db,
+                        "data_table": data_table,
+                        "sql": sql,
+                        "return_table": return_table,
+                        "return_field_comment": return_field_comment,
+                        "per_page": per_page,
+                        "status": status,
+                        "csrfmiddlewaretoken": "{{ csrf_token }}",
+                        "delete_status": delete_status,
+                        "update_status": update_status,
+                        "insert_status": insert_status,
+                        "delete_fields": delete_field,
+                        "update_fields": update_field,
+                        "insert_fields": insert_field,
+                        "return_fields": return_fields,
+                        "return_total": return_total
+                    },
+                    function (res) {
+                        if (res.RTN_CODE === 1) {
+                            alert("成功", res.RTN_MSG, () => {
+                            }, {type: 'success', confirmButtonText: '确定'});
+                            refresh_data()
+                            $("#addmodal").modal("hide");
+                        } else {
+                            alert("错误", res.RTN_MSG, () => {
+                            }, {type: 'error', confirmButtonText: '确定'});
+                        }
+                    })
+            }
+        }, {type: 'question', confirmButtonText: '确定'});
+    }
+
+    function del(obj, name) {
+        confirm("提醒", '确认删除?', function (isConfirm) {
+            if (isConfirm) {
+                $.post("{% url "api_view_delete" %}", {
+                        "name": name,
+                        "del_type": "api",
+                        "csrfmiddlewaretoken": "{{ csrf_token }}",
+                    },
+                    function (res) {
+                        if (res.RTN_CODE === '01') {
+                            alert("成功", res.RTN_MSG, () => {
+                            }, {type: 'success', confirmButtonText: '确定'});
+                            refresh_data()
+                            $("#addmodal").modal("hide");
+                        } else {
+                            alert("错误", res.RTN_MSG, () => {
+                            }, {type: 'error', confirmButtonText: '确定'});
+                        }
+                    })
+            }
+        }, {type: 'warning', confirmButtonText: '确定'});
+    }
+
+    function refresh_data() {
+        let opt = {
+            url: "{% url "api_view_ApiList" %}",
+            silent: true
+        }
+        $("#table").bootstrapTable("refresh", opt);
+    }
+
+</script>
+

@@ -1,0 +1,32 @@
+.progress-1 {
+	margin: 0 auto;
+}
+.progress-bar-1 {
+	margin: 0 0 20px 0;
+	background: #2A3039;
+	border-radius: 5px;
+}
+.red-bar {
+	border-radius: 4px;
+	display: block;
+	width: 0%;
+	box-shadow: 0px 0px 10px 1px #BF7A6A, 0 0 1px #BF7A6A, 0 0 1px #BF7A6A, 0 0 1px #BF7A6A, 0 0 1px #BF7A6A, 0 0 1px #BF7A6A, 0 0 1px #BF7A6A;
+}
+.green-bar {
+	border-radius: 4px;
+	display: block;
+	width: 0%;
+	box-shadow: 0px 0px 10px 1px #A9BD7A, 0 0 1px #A9BD7A, 0 0 1px #A9BD7A, 0 0 1px #A9BD7A, 0 0 1px #A9BD7A, 0 0 1px #A9BD7A, 0 0 1px #A9BD7A;
+}
+.blue-bar {
+	border-radius: 4px;
+	display: block;
+	width: 0%;
+	box-shadow:0px 0px 10px 1px #6FB4CE, 0 0 1px #6FB4CE, 0 0 1px #6FB4CE, 0 0 1px #6FB4CE, 0 0 1px #6FB4CE, 0 0 1px #6FB4CE, 0 0 1px #6FB4CE;
+}
+.yellow-bar {
+	border-radius: 4px;
+	display: block;
+	width: 0%;
+	box-shadow: 0px 0px 10px 1px #D2A968, 0 0 1px #D2A968, 0 0 1px #D2A968, 0 0 1px #D2A968, 0 0 1px #D2A968, 0 0 1px #D2A968, 0 0 1px #D2A968;
+}

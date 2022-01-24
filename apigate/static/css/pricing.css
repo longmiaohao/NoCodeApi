@@ -1,0 +1,296 @@
+.plans {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.plans ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.plans ul li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.pricePlans {
+	zoom: 1;
+	margin: 0 auto;
+}
+.pricePlans:after {
+	content: '';
+	display: table;
+	clear: both;
+}
+.pricePlans .plans .plan {
+	background: #E8EFF7;
+	float: left;
+	width: 100%;
+	text-align: center;
+	border-radius: 5px;
+	margin: 0 0 10px 0;
+}
+.pricePlans .plans .plan.bordered {
+	background-color: transparent;
+	border: 1px solid #6FB4CE;
+
+}
+.pricePlans .plans .plan.bordered .planContainer .options li span {
+	color: #6FB4CE;
+}
+
+.planContainer .title h2 {
+	font-size: 2.125em;
+	font-weight: 300;
+	color: #707C8E;
+	margin: 0;
+	padding: .6em 0;
+	text-shadow: none;
+}
+.planContainer .title h2.bestPlanTitle {
+	background: #6FB4CE;
+	color: white;
+	border-radius: 3px 3px 0 0;
+}
+.planContainer .price p {
+	background: #6FB4CE;
+	color: #fff;
+	font-size: 1.2em;
+	font-weight: 700;
+	height: 2.6em;
+	line-height: 2.6em;
+	margin: 0 0 1em;
+}
+.planContainer .price p.bestPlanPrice {
+	background: #D8E3EF;
+	color: #6FB4CE;
+}
+.planContainer .price p span {
+	color: #FFD06B;
+}
+.planContainer .options {
+	margin-top: 1em;
+}
+.planContainer .options li {
+	font-weight: 700;
+	color: #707C8E;
+	line-height: 2.5;
+}
+.planContainer .options li span {
+	font-weight: 400;
+	color: #607896;
+}
+.planContainer .button a {
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #707C8E;
+	font-weight: 700;
+	line-height: 2.8em;
+	border: 1px solid #6FB4CE;
+	display: inline-block;
+	width: 80%;
+	height: 2.8em;
+	margin: 1.5em 0 1.8em;
+}
+.planContainer .button a.bestPlanButton {
+	color: white;
+	background: #BF7A6A;
+	border: 1px solid #BF7A6A;
+}
+#credits {
+	text-align: center;
+	font-size: .8em;
+	font-style: italic;
+	color: #707C8E;
+}
+#credits a {
+	color: #404040;
+}
+#credits a:hover {
+	text-decoration: none;
+}
+
+@media screen and (min-width: 481px) and (max-width: 768px) {
+	.pricePlans .plans .plan {
+		width: 49%;
+		margin: 0 2% 20px 0;
+	}
+	.pricePlans .plans > li:nth-child(2n) {
+		margin-right: 0;
+	}
+}
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+	.pricePlans .plans .plan {
+		width: 49%;
+		margin: 0 2% 20px 0;
+	}
+	.pricePlans .plans > li:nth-child(2n) {
+		margin-right: 0;
+	}
+}
+@media screen and (min-width: 1025px) {
+	.pricePlans {
+		margin: 0 auto;
+	}
+	.pricePlans .plans .plan {
+		width: 24%;
+		margin: 0 1.33% 0 0;
+		-webkit-transition: all .25s;
+		-moz-transition: all .25s;
+		-ms-transition: all .25s;
+		-o-transition: all .25s;
+		transition: all .25s;
+	}
+	.pricePlans .plans .plan:hover {
+		-webkit-transform: scale(1.04);
+		-moz-transform: scale(1.04);
+		-ms-transform: scale(1.04);
+		-o-transform: scale(1.04);
+		transform: scale(1.04);
+	}
+	.pricePlans .plans > li:last-child {
+		margin-right: 0;
+	}
+	.planContainer .button a {
+		-webkit-transition: all .25s;
+		-moz-transition: all .25s;
+		-ms-transition: all .25s;
+		-o-transition: all .25s;
+		transition: all .25s;
+	}
+	.planContainer .button a:hover {
+		background: #6FB4CE;
+		color: white;
+	}
+	.planContainer .button a.bestPlanButton:hover {
+		background: #9E5645;
+		border: 1px solid #9E5645;
+	}
+}
+
+/* Pricing Plans 2 */
+.plan2 {
+	padding: 10px;
+	text-align: center;
+	background: #E8EFF7;
+	border: 1px solid #E8EFF7;
+	border-radius: 10px;
+}
+@media(max-width: 767px) {
+	.plan2 {
+		margin-bottom: 20px;
+	}
+}
+.plan2-title {
+	margin-bottom: 12px;
+	font-size: 24px;
+	color: #333333; 
+	text-shadow: none;
+	margin-top: 30px;
+}
+.plan2-price {
+	margin-bottom: 20px;
+	line-height: 1;
+	font-size: 28px;
+	font-weight: bold;
+	color: #d66061; 
+}
+.plan2-unit {
+	display: block;
+	margin-top: 5px;
+	font-size: 13px;
+	font-weight: normal;
+	color: gray;
+}
+ul.plan2-details li {
+	cursor: pointer;
+	width: 30%;
+	display: inline-block;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	text-align: center;
+	border: 1px solid #a9bcd2;
+	background-color: #e9eef3;
+	/* Fallback Color */
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f9fbfc), to(#e9eef3));
+	/* Saf4+, Chrome */
+	background-image: -webkit-linear-gradient(top, #f9fbfc, #e9eef3);
+	/* Chrome 10+, Saf5.1+, iOS 5+ */
+	background-image: -moz-linear-gradient(top, #f9fbfc, #e9eef3);
+	/* FF3.6 */
+	background-image: -ms-linear-gradient(top, #f9fbfc, #e9eef3);
+	/* IE10 */
+	background-image: -o-linear-gradient(top, #f9fbfc, #e9eef3);
+	/* Opera 11.10+ */
+	background-image: linear-gradient(top, #f9fbfc, #e9eef3);
+	padding: 15px 0;
+	margin: 0 5px 10px 0;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	color: gray; 
+}
+ul.plan2-details li h4.plan2-name {
+	font-size: 12px;
+	margin: 0;
+	text-shadow: none;
+}
+ul.plan2-details li span {
+	font-size: 15px;
+	font-weight: 600;
+}
+ul.plan2-details li:hover {
+	background-color: #a4c2dc;
+	/* Fallback Color */
+	background-image: -webkit-gradient(linear, left top, left bottom, from(white), to(#a4c2dc));
+	/* Saf4+, Chrome */
+	background-image: -webkit-linear-gradient(top, white, #a4c2dc);
+	/* Chrome 10+, Saf5.1+, iOS 5+ */
+	background-image: -moz-linear-gradient(top, white, #a4c2dc);
+	/* FF3.6 */
+	background-image: -ms-linear-gradient(top, white, #a4c2dc);
+	/* IE10 */
+	background-image: -o-linear-gradient(top, white, #a4c2dc);
+	/* Opera 11.10+ */
+	background-image: linear-gradient(top, white, #a4c2dc);
+	color: #5b90bf;
+	border: 1px solid #a4c2dc;
+}
+ul.plan2-details li:last-child {
+	margin-right: 0; 
+}
+.plan2-recommended {
+	margin: -20px auto -16px auto;
+	width: 70%;
+	font-weight: 600;
+	color: white;
+	background: #BF7A6A;
+	padding: 7px;
+	border-radius: 0 0 8px 8px;
+	position: relative;
+}
+.plan2-recommended:before {
+	position: absolute;
+	content: "";
+	left: -16px;
+	top: 0;
+	border-right: 8px solid #BF7A6A;
+	border-top: 9px solid transparent;
+	border-left: 8px solid transparent;
+}
+.plan2-recommended:after {
+	position: absolute;
+	content: "";
+	right: -16px;
+	top: 0;
+	border-left: 8px solid #BF7A6A;
+	border-top: 9px solid transparent;
+	border-right: 8px solid transparent;	
+}
+@media (min-width: 768px) and (max-width: 991px) {
+	.plan2 {
+		margin-bottom: 10px; 
+	} 
+}

@@ -1,0 +1,127 @@
+/* Cal-HeatMap CSS */
+
+.cal-heatmap-container {
+	display: block;
+}
+
+.cal-heatmap-container .graph-label {
+	fill: #707c8e;
+	font-size: 13px
+}
+
+.cal-heatmap-container .graph, .cal-heatmap-container .graph-legend rect {
+	shape-rendering: crispedges
+}
+
+.cal-heatmap-container .graph-rect {
+	fill: #ededed
+}
+
+.cal-heatmap-container .graph-subdomain-group rect:hover {
+	stroke: #FFF;
+	stroke-width: 1px
+}
+
+.cal-heatmap-container .subdomain-text {
+	font-size: 8px;
+	fill: #707c8e;
+	pointer-events: none
+}
+
+.cal-heatmap-container .hover_cursor:hover {
+	cursor: pointer
+}
+
+.cal-heatmap-container .qi {
+	background-color: #707c8e;
+	fill: #707c8e
+}
+
+/*
+Remove comment to apply this style to date with value equal to 0
+.q0
+{
+	background-color: #fff;
+	fill: #fff;
+	stroke: #ededed
+}
+*/
+
+.cal-heatmap-container .q1 {
+	background-color: #9ab162;
+	fill: #9ab162;
+}
+
+.cal-heatmap-container .q2 {
+	background-color: #8ea753;
+	fill: #8ea753;
+}
+
+.cal-heatmap-container .q3 {
+	background-color: #7f964a;
+	fill: #7f964a;
+}
+
+.cal-heatmap-container .q4 {
+	background-color: #bfce9c;
+	fill: #bfce9c;
+}
+
+.cal-heatmap-container .q5 {
+	background-color: #cad6ad;
+	fill: #cad6ad;
+}
+
+.cal-heatmap-container rect.highlight {
+	stroke: #444;
+	stroke-width:1
+}
+
+.cal-heatmap-container text.highlight {
+	fill: #444;
+}
+
+.cal-heatmap-container rect.now {
+	stroke: red;
+}
+
+.cal-heatmap-container text.now {
+	fill: red;
+	font-weight: 800
+}
+
+.cal-heatmap-container .domain-background {
+	fill: none;
+	shape-rendering: crispedges
+}
+
+.ch-tooltip {
+	padding: 10px;
+	background: #222;
+	color: #bbb;
+	font-size: 12px;
+	line-height: 1.4;
+	width: 140px;
+	position: absolute;
+	z-index: 99999;
+	text-align: center;
+	border-radius: 2px;
+	display: none;
+	box-sizing: border-box;
+}
+
+.ch-tooltip::after {
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-color: transparent;
+	border-style: solid;
+	content: "";
+	padding: 0;
+	display: block;
+	bottom: -6px;
+	left: 50%;
+	margin-left: -6px;
+	border-width: 6px 6px 0;
+	border-top-color: #222;
+}

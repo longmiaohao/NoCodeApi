@@ -1,0 +1,165 @@
+/* Tasks */
+.task-wrapper {
+  background-color: #2a3039;
+  padding: 15px;
+  margin-bottom: 10px; }
+  .task-wrapper h4.task-name {
+    margin: 0 0 10px 0;
+    padding: 0 0 10px 0;
+    border-bottom: 1px dashed #4b5465; }
+    .task-wrapper h4.task-name span {
+      text-align: right;
+      font-weight: 500; }
+
+/* Task Drag and Drop */
+.drag-your-task {
+  padding: 30px 15px;
+  border: 1px dashed #4b5465;
+  background-color: transparent;
+  text-align: center;
+  color: #707C8E; }
+  .drag-your-task i {
+    font-size: 20px;
+    color: #707C8E;
+    border-radius: 30px;
+    line-height: 28px;
+    padding: 6px;
+    width: 32px;
+    height: 32px;
+    border: 2px solid #4b5465; }
+  .drag-your-task h4 {
+    font-size: 16px;
+    margin: 10px 0 0 0;
+    padding: 0;
+    font-weight: 500;
+    line-height: 20px; }
+
+.add-task-btn {
+  padding: 6px 15px;
+  border: 1px dashed #4b5465;
+  background-color: transparent;
+  text-align: center;
+  color: #A9BD7A;
+  display: block;
+  font-size: 14px;
+  margin-top: 10px;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out; }
+  .add-task-btn i {
+    font-size: 14px;
+    text-align: left;
+    margin-right: 7px; }
+  .add-task-btn:hover {
+    background-color: #353C48;
+    color: #A9BD7A;
+    border: 1px dashed #A9BD7A; }
+
+.task-block {
+  padding: 15px 10px 5px 10px;
+  background-color: #353C48;
+  border-left: 2px solid #2a3039;
+  box-sizing: border-box;
+  display: block;
+  margin-bottom: 7px;
+  position: relative;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out; }
+  .task-block.critical {
+    border-left: 2px solid rgba(255, 144, 144, 0.6); }
+    .task-block.critical i {
+      color: #BF7A6A; }
+  .task-block.bug {
+    border-left: 2px solid rgba(255, 197, 80, 0.6); }
+    .task-block.bug i {
+      color: #D2A968; }
+  .task-block.complete {
+    border-left: 2px solid rgba(89, 196, 196, 0.6); }
+    .task-block.complete i {
+      color: #A9BD7A; }
+  .task-block.new {
+    border-left: 2px solid rgba(18, 164, 244, 0.5); }
+    .task-block.new i {
+      color: #6FB4CE; }
+  .task-block:hover {
+    background-color: #404857;
+    cursor: move; }
+  .task-block h5.task-id {
+    margin: 0 0 7px 0;
+    padding: 0;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #8c96a5; }
+    .task-block h5.task-id i {
+      margin-left: 5px;
+      font-size: 10px; }
+  .task-block .assigned-user {
+    width: 48px;
+    height: 48px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    opacity: 0.9; }
+    .task-block .assigned-user img {
+      border: 0;
+      width: 48px;
+      height: 48px;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px; }
+  .task-block p.task-desc {
+    margin: 0;
+    padding: 0 0 4px 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #8c96a5; }
+  .task-block .task-type {
+    padding: 0 8px;
+    position: absolute;
+    right: 10px;
+    bottom: 7px;
+    background-color: #4b5465;
+    font-size: 11px;
+    color: #b4bbc8;
+    line-height: 16px; }
+    .task-block .task-type:after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: -7px;
+      top: 0;
+      border-right: 7px solid #4b5465;
+      border-bottom: 7px solid transparent; }
+    .task-block .task-type:before {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: -7px;
+      bottom: 0;
+      border-right: 7px solid #4b5465;
+      border-top: 7px solid transparent; }
+  .task-block ul.task-footer {
+    margin: 3px 0 0 0;
+    padding: 0;
+    list-style-type: none;
+    font-size: 11px;
+    color: #8c96a5; }
+    .task-block ul.task-footer li {
+      margin-right: 15px;
+      display: inline-block; }
+  .task-block:hover {
+    color: #000000; }
+
+.progress {
+  margin-bottom: 0;
+  background: #404857; }
+
+/*# sourceMappingURL=tasks.css.map */
