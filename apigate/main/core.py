@@ -1,7 +1,4 @@
-import sys
-import os
 from django.conf import settings
-
 from apigate.main.db.base.Constructor import insert_PreSQL_construct, select_template_PreSQL_construct, \
     update_PreSQL_construct, delete_PreSQL_construct, bind_builtin_values
 from apigate.main.db.base.DBBehavor import connect_db, construct_get_table_fields_SQL
@@ -11,6 +8,9 @@ from configparser import ConfigParser
 from utils.DB import *
 from django.http import JsonResponse
 from utils.AES import *
+from functools import wraps
+import importlib
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 config = ConfigParser()
 # # 传入读取文件的地址，encoding文件编码格式，中文必须
@@ -20,6 +20,28 @@ db_path = config["DB_PATH"]["path"]
 debug = True
 
 
+def filterDecorator(func):
+    @wraps(func)
+    def inner(*args, **kwargs):
+        request = args[0]
+        api_name = args[1].split('/')[0]
+        module_name = 'apigate.filters.' + api_name  # 模块名的字符串
+        __class = None
+        try:
+            __class = importlib.import_module(module_name)  # 导入的就是需要导入的那个metaclass
+            filter_func = eval("__class.%s" % api_name)(request)
+            request_process = filter_func.request(request)
+            if request_process:
+                return request_process
+            response = func(*args, **kwargs)
+            response = filter_func.response(request, response)
+            return response
+        except Exception as e:
+            return func(*args, **kwargs)
+    return inner
+
+
+@filterDecorator
 def index(request, path):
     """
     使用sqlite3数据库
@@ -97,11 +119,11 @@ def index(request, path):
     if db.err:
         return JsonResponse({"RTN_CODE": "00", "RTN_MSG": "数据库%s连接失败, %s" % (db_name, db.err)},
                             json_dumps_params={'ensure_ascii': False})
-    # Mysql库支持
     pre_sql = ""
     pre_sql_values = []
     total_pre_sql = ""
     total_pre_sql_values = []
+    msg = ""
     if c['op']:  # 增删改操作判定 查询操作c[op]为空
         # 入参合法性验证
         if c['op'] == "INSERT":                                             # 插入SQL拼接
@@ -204,11 +226,11 @@ def index(request, path):
                 if value:
                     pre_sql += sql
                     pre_sql_values += value
-                if per_page:  # 分页接口
+                if per_page != 'ALL':  # 分页接口
                     pre_sql += ' LIMIT %s OFFSET %s'
                     pre_sql_values.extend([int(c['limit']), int(c['offset'])])
             data = db.get_json(pre_sql, pre_sql_values)
-            res_data["DATA"] = json.loads(data) if data else []        # 返回None
+            res_data["DATA"] = json.loads(data) if data else []         # 返回None
             if db.err:
                 res_data["ERROR_MSG"] = db.err
         elif return_target_table_or_view == '1':                        # 返回表数据
@@ -224,7 +246,7 @@ def index(request, path):
             if value:
                 pre_sql += sql
                 pre_sql_values += value
-            if per_page:        # 分页接口
+            if per_page != 'ALL':        # 分页接口
                 pre_sql += ' LIMIT %s OFFSET %s'
                 pre_sql_values.extend([int(c['limit']), int(c['offset'])])
             data = db.get_json(pre_sql.replace("'%'", "'%%'"), pre_sql_values)     # 返回目标表
