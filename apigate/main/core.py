@@ -165,6 +165,9 @@ def index(request, path):
                                                               db_config['UPDATE_FIELDS']['UPDATE_FIELDS'],
                                                               db_config['UPDATE_FIELDS']["CONDITION_FIELDS"],
                                                               alias_fields, target_table_or_view)
+            if not pre_sql:
+                return JsonResponse({"RTN_CODE": '00', "RTN_MSG": pre_sql_values},
+                                    json_dumps_params={'ensure_ascii': False})
             msg = "更新成功"
         # 执行数据库增删改操作
         if db.execute(pre_sql.replace("'%'", "'%%'"), pre_sql_values):

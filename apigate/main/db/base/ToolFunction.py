@@ -207,6 +207,9 @@ def context_construct(request, path, context=None):
     context["page"] = request.GET.get("page", None)         # 页码分页
     context["offset"] = request.GET.get("offset", None)     # 偏移分页
     context["limit"] = request.GET.get("limit", None)       # 限制返回条数
+    if request.method == 'POST':
+        context["offset"] = request.POST.get("offset", '0')
+        context["limit"] = request.POST.get("limit", '0')
     context["parameters"] = request_data(request)           # 数据转字典
     context['sort'] = {}                                    # 用户自定义排序 格式sort=field1_asc:field2_desc...
     context['err'] = ""

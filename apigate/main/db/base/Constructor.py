@@ -75,6 +75,8 @@ def update_PreSQL_construct(parameters, update_fields, condition_fields, alias_f
             condition_values.append(value)
             condition_parameters[k] = value
     condition_str, condition_values = condition_generate(condition_parameters, condition_fields, {})
+    if condition_str == '':
+        return '', '缺少条件字段: %s' % str(condition_fields.keys())
     return "UPDATE %s SET %s WHERE %s" % (table, filed_generate(field_list, {}, op_type='U'), condition_str), tuple(update_values + condition_values)
 
 
