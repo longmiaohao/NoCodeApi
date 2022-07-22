@@ -11,6 +11,7 @@ class RawSql:
     __sql = ''
     __database_name = ''
     err_msg = ""
+    auto_commit = True
 
     @staticmethod
     def __doc__():
@@ -31,7 +32,11 @@ class RawSql:
         self.__connection = connections[self.__database_name]
 
     def __del__(self):
-        self.close()
+        try:
+            self.__cursor.close()
+            self.__con.close()
+        except:
+            pass
 
     def set_db(self, database_name):
         self.__database_name = database_name
@@ -143,18 +148,32 @@ class RawSql:
                 cursor.execute(self.__sql, parameters)
             else:
                 cursor.execute(self.__sql)
-            cursor.execute('commit')
+            if self.auto_commit:
+                cursor.execute('commit')
             return True
         except Exception as e:
-            connections[self.__database_name].rollback()
+            if self.auto_commit:
+                connections[self.__database_name].rollback()
             self.err_msg = str(e)
             return False
         finally:
             cursor.close()
 
     def close(self):
-        pass
-        # self.__connection.close()
+        try:
+            self.__cursor.close()
+            self.__con.close()
+        except:
+            pass
+
+    def begin(self):
+        self.auto_commit = False
+
+    def rollback(self):
+        self.__con.rollback()
+
+    def commit(self):
+        self.__con.commit()
 
     def sql_bind(self, request, param='data', table=""):
         """

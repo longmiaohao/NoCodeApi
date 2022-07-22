@@ -44,6 +44,7 @@ class DB:
         self.__con = ""
         self.__cursor = ""
         self.err = ""
+        self.auto_commit = True
 
     def connection_oracle(self):
 
@@ -166,12 +167,15 @@ class DB:
                 self.__cursor.execute(sql, parameters)
             else:
                 self.__cursor.execute(sql)
-            if not self.__db_path:
-                self.__cursor.execute('commit')
-            else:
-                self.__con.commit()
+            if self.auto_commit:
+                if not self.__db_path:
+                    self.__cursor.execute('commit')
+                else:
+                    self.__con.commit()
             return True
         except Exception as e:
+            if self.auto_commit:
+                self.__con.rollback()
             self.err = str(e)
             warnings.warn(str(e))
             return False
@@ -212,5 +216,21 @@ class DB:
         except:
             pass
 
+    def begin(self):
+        self.auto_commit = False
+
+    def rollback(self):
+        self.__con.rollback()
+
+    def commit(self):
+        if not self.__db_path:
+            self.__cursor.execute('commit')
+        else:
+            self.__con.commit()
+
     def __del__(self):
-        self.close()
+        try:
+            self.__cursor.close()
+            self.__con.close()
+        except:
+            pass
