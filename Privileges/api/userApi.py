@@ -19,8 +19,9 @@ def create_user(request):
     """
     call_user = request.COOKIES.get('username', None)
     post_data = ParsePost(request)
-    if len(post_data['password']) < 6:
-        return JsonResponse({"RTN_CODE": "00", "RTN_MSG": "密码长度不可少于6"})
+    password_err = is_weak_password(post_data['password'])
+    if not password_err:
+        return JsonResponse({"RTN_CODE": "00", "RTN_MSG": password_err})
     password = post_data['password']
     aes = Aes(32, settings.AES_KEY)
     post_data['password'] = aes.encrypt(password)
@@ -81,10 +82,11 @@ def update_user(request):
     post_data = ParsePost(request)
     if 'username' in post_data['data']:
         return JsonResponse({"RTN_CODE": "00", "RTN_MSG": "不可修改USERNAME"})
-    if "password" in post_data['data'].keys() and len(post_data['data']['password']) < 6:
-        return JsonResponse({"RTN_CODE": "00", "RTN_MSG": "密码长度不可少于6"})
     if "password" in post_data['data'].keys():
         password = post_data["data"]['password']
+        password_err = is_weak_password(password)
+        if not password_err:
+            return JsonResponse({"RTN_CODE": "00", "RTN_MSG": password_err})
         aes = Aes(32, settings.AES_KEY)
         post_data["data"]['password'] = aes.encrypt(password)
     if user.update_user(post_data):
@@ -155,3 +157,22 @@ def error(request, info):
     :return:
     """
     return JsonResponse(info, json_dumps_params={"ensure_ascii": False})
+
+
+def is_weak_password(password):
+    """
+    强密码检测 至少包含一个大写字符 一个小写字符 一个数字 一个非字母数字字符
+    """
+    if not password:
+        return '密码不可为空'
+    if len(password) < 6:
+        return "密码长度必须大于等于6位"
+    if not re.search('[a-z]', password):
+        return "密码必须包含至少一个小写字符"
+    if not re.search('[A-Z]', password):
+        return "密码必须包含至少一个大写字符"
+    if not re.search('\d', password):
+        return "密码必须包含至少一个数字"
+    if not re.search('\W', password):
+        return "密码必须包含至少一个非数字字符"
+    return False
