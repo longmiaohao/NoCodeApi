@@ -60,7 +60,7 @@ class DB:
             self.__cursor = self.__con.cursor()
             return self.__cursor
         except Exception as e:
-            warnings.warn("Oracle数据库: " + self.__host + ":" + self.__port + " 连接失败\n" + str(e))
+            warnings.warn("Oracle数据库: " + self.__host + ":" + str(self.__port) + " 连接失败\n" + str(e))
             print(str(e))
             self.err = str(e)
             return False
@@ -77,7 +77,7 @@ class DB:
             self.__cursor = self.__con.cursor()
             return self.__cursor
         except Exception as e:
-            warnings.warn("sqlserver数据库: " + self.__host + ":" + self.__port + " 连接失败\n" + str(e))
+            warnings.warn("sqlserver数据库: " + self.__host + ":" + str(self.__port) + " 连接失败\n" + str(e))
             print(str(e))
             self.err = str(e)
             return False
@@ -89,7 +89,7 @@ class DB:
             self.__cursor = self.__con.cursor()
             return self.__cursor
         except Exception as e:
-            # warnings.warn("mysql数据库: " + self.__host + ":" + self.__port + " 连接失败\n" + str(e))
+            warnings.warn("mysql数据库: " + self.__host + ":" + str(self.__port) + " 连接失败\n" + str(e))
             self.err = str(e)
             print(str(e))
             return False
