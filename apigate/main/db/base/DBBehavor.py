@@ -49,3 +49,16 @@ def construct_get_table_fields_SQL(db_name, table, db_type="Mysql"):
         print("不支持的数据库类型")
         return '*'
     return sql_construct[db_type.upper()]
+
+def DB_ERRORS(db_type, error):
+    """
+    数据库错误表
+    """
+    if db_type == 'MYSQL':
+        error = eval(error)
+        code = error[0]
+        msg = error[1]
+        errors = {1054: "表字段(%s)不存在" % msg.split(' ')[2]}
+        return errors[code]
+    else:
+        return "unknown error"

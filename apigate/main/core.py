@@ -1,7 +1,7 @@
 from django.conf import settings
 from apigate.main.db.base.Constructor import insert_PreSQL_construct, select_template_PreSQL_construct, \
     update_PreSQL_construct, delete_PreSQL_construct, bind_builtin_values
-from apigate.main.db.base.DBBehavor import connect_db, construct_get_table_fields_SQL
+from apigate.main.db.base.DBBehavor import connect_db, construct_get_table_fields_SQL, DB_ERRORS
 from apigate.main.db.base.ToolFunction import check_ip_valid, context_construct, check_call_method_valid, \
     query_field_check, parameters_vail, get_return_fields, condition_generate, sort_for_sql
 from configparser import ConfigParser
@@ -259,7 +259,7 @@ def index(request, path):
                     err_msg = db.err
                 else:
                     err_msg = '接口内部错误'
-                return JsonResponse({"RTN_CODE": "00", "RTN_MSG": err_msg}, json_dumps_params={'ensure_ascii': False})
+                return JsonResponse({"RTN_CODE": "00", "RTN_MSG": DB_ERRORS(db_type.upper(), err_msg)}, json_dumps_params={'ensure_ascii': False})
         else:
             return JsonResponse({"RTN_CODE": "00", "RTN_MSG": "接口没有数据"}, json_dumps_params={'ensure_ascii': False})
         if if_return_field_info == '1':  # 返回字段信息控制
