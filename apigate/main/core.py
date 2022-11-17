@@ -3,7 +3,8 @@ from apigate.main.db.base.Constructor import insert_PreSQL_construct, select_tem
     update_PreSQL_construct, delete_PreSQL_construct, bind_builtin_values
 from apigate.main.db.base.DBBehavor import connect_db, construct_get_table_fields_SQL, DB_ERRORS
 from apigate.main.db.base.ToolFunction import check_ip_valid, context_construct, check_call_method_valid, \
-    query_field_check, parameters_vail, get_return_fields, condition_generate, sort_for_sql, check_call_frequency
+    query_field_check, parameters_vail, get_return_fields, condition_generate, sort_for_sql, check_call_frequency, \
+    constraint_check, update_fields_constraint_check
 from configparser import ConfigParser
 from utils.DB import *
 from django.http import JsonResponse
@@ -25,14 +26,14 @@ def filterDecorator(func):
     def inner(*args, **kwargs):
         request = args[0]
         api_name = args[1].split('/')[0]
-        c = context_construct(request, api_name)
+        c = context_construct(request, args[1])
         if c['err']:
             return JsonResponse({"RTN_CODE": '00', "RTN_MSG": c['err']},
                                 json_dumps_params={'ensure_ascii': False})  # 上下文错误
         setattr(request, 'api_context', c)
         db_config = c['config']
         # 检测接口频率限制
-        if not check_call_frequency(api_name, 3):
+        if not check_call_frequency(api_name, 9999):
             return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "调用频繁, 请稍后再试"},
                                 json_dumps_params={'ensure_ascii': False})  # 调用频繁截断
         # 获取接口组装参数
@@ -82,7 +83,7 @@ def index(request, path):
     port = db_config['PORT']                                                # 数据库端口
     username = db_config['USERNAME']                                        # 数据库用户名
     password = Aes.decrypt(db_config['PASSWORD'], SECRET_KEY)               # 数据库AES后的密码
-    db_name = db_config['DB']                                                    # 数据库
+    db_name = db_config['DB']                                               # 数据库
     # 接口配置参数
     target_table_or_view = db_config['TARGET_TABLE_OR_VIEW']                # 接口的默认数据表或视图 如果没有自定义SQL则取该表数据
     execute_sql = db_config['EXECUTE_SQL'].replace("&quto", "'")            # 接口自定义SQL
@@ -146,6 +147,9 @@ def index(request, path):
             check, err_msg = parameters_vail(c['parameters'], db_config['INSERT_FIELDS'], alias_fields)
             if not check:  # 参数校验
                 return JsonResponse({"RTN_CODE": '00', "RTN_MSG": err_msg}, json_dumps_params={'ensure_ascii': False})
+            check, err_msg = constraint_check(c['parameters'], db_config['INSERT_FIELDS'], alias_fields)
+            if not check:  # 约束校验
+                return JsonResponse({"RTN_CODE": '00', "RTN_MSG": err_msg}, json_dumps_params={'ensure_ascii': False})
             pre_sql, pre_sql_values = insert_PreSQL_construct(c['parameters'], alias_fields, target_table_or_view)
             msg = "新增成功"
         if c['op'] == "DELETE":      # 删除SQL拼接
@@ -156,6 +160,9 @@ def index(request, path):
             if not check:  # 参数校验
                 return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "删除操作含有非法字段, %s" % err_msg},
                                     json_dumps_params={'ensure_ascii': False})
+            check, err_msg = constraint_check(c['parameters'], db_config['DELETE_FIELDS'], alias_fields)
+            if not check:  # 约束校验
+                return JsonResponse({"RTN_CODE": '00', "RTN_MSG": err_msg}, json_dumps_params={'ensure_ascii': False})
             pre_sql, pre_sql_values = delete_PreSQL_construct(c['parameters'], db_config['DELETE_FIELDS'], alias_fields,
                                                               target_table_or_view)
             msg = "删除成功"
@@ -172,6 +179,12 @@ def index(request, path):
             if not check:
                 return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "含有非法编辑字段: %s" % err_msg},
                                     json_dumps_params={'ensure_ascii': False})
+            check, err_msg = update_fields_constraint_check(c['parameters'], db_config['UPDATE_FIELDS']["UPDATE_FIELDS"], alias_fields)
+            if not check:  # 检查更新字段约束
+                return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "值域：" + err_msg}, json_dumps_params={'ensure_ascii': False})
+            check, err_msg = constraint_check(c['parameters'], db_config['UPDATE_FIELDS']["CONDITION_FIELDS"], alias_fields)
+            if not check:  # 检查条件约束
+                return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "条件：" + err_msg}, json_dumps_params={'ensure_ascii': False})
             pre_sql, pre_sql_values = update_PreSQL_construct(c['parameters'],
                                                               db_config['UPDATE_FIELDS']['UPDATE_FIELDS'],
                                                               db_config['UPDATE_FIELDS']["CONDITION_FIELDS"],

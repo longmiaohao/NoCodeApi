@@ -317,22 +317,98 @@ def check_call_frequency(api_name, per_min=9999):
         检测调用频率 频率合理 True 超过 False
     """
     import redis
-    redis_key = 'frequency_' + api_name
+    redis_key = 'apigate_api_' + api_name
     r = None
     if not redis_config['password']:
         r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']))
     else:
         r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']),
                               password=redis_config['password'])
-    query_frequency = r.get(redis_key)
+    query_frequency = r.hget(redis_key, 'called')
     if not query_frequency:     # 查询是否已经存在调用 没有则设置调用过期
-        r.set(redis_key, 1)
+        r.hset(redis_key, 'called', 1)
         r.expire(redis_key, 60)
         return True
     else:
         if int(query_frequency) >= int(per_min):
             return False
         else:
-            r.set(redis_key, int(query_frequency) + 1)
+            r.hset(redis_key, 'called', int(query_frequency) + 1)
             return True
+
+
+def lower_to_capital(dict_info):
+    """
+     字典的key 转大写
+    """
+    new_dict = {}
+    for i, j in dict_info.items():
+        new_dict[i.upper()] = j
+    return new_dict
+
+
+def constraint_check(user_parameters, config_fields, alias_fields):
+    """
+    约束检查 检查配置里面的CONSTRAINT字段内容
+    """
+    reverse_alias_fields = {v: k for k, v in alias_fields.items()}      # 反转alias_fields
+    user_parameters = lower_to_capital(user_parameters)
+    for k in config_fields.keys():      # 按config补齐用户参数，判断是否为空
+        if k in reverse_alias_fields.keys():
+            k = reverse_alias_fields[k]
+        if k not in user_parameters.keys():
+            user_parameters[k] = ''
+    for k in config_fields.keys():      # 检查非空字段是否上传
+        if 'CONSTRAINT' in config_fields[k]:
+            if 'NULL' in config_fields[k]['CONSTRAINT'] and config_fields[k]['CONSTRAINT']['NULL'] == 0:
+                if k not in user_parameters:
+                    return False, '字段(%s)不可为空' % k
+    for k in user_parameters:                # 传入参数为空检查
+        if k.upper() in alias_fields:        # {"alias_field": "real_field"}
+            k = alias_fields[k.upper()]
+        if k in config_fields.keys():
+            if not config_fields[k.upper()]:
+                config_fields[k.upper()] = {}
+            if 'CONSTRAINT' in config_fields[k.upper()]:
+                if 'NULL' in config_fields[k.upper()]['CONSTRAINT']:
+                    if config_fields[k.upper()]['CONSTRAINT']['NULL'] == 0 and not user_parameters[k]:
+                        return False, '字段(%s)不可为空' % k
+    return True, ""
+
+
+def update_fields_constraint_check(user_parameters, config_fields, alias_fields):
+    """
+    UPDATE_FIELDS约束检查 检查配置里面的CONSTRAINT字段内容
+    """
+    reverse_alias_fields = {v: k for k, v in alias_fields.items()}      # 反转alias_fields
+    user_parameters = lower_to_capital(user_parameters)
+    # for k in config_fields.keys():      # 按config补齐用户参数，判断是否为空
+    #     if k in reverse_alias_fields.keys():
+    #         if k not in user_parameters.keys():
+    #             user_parameters[k] = ''
+    #         k = reverse_alias_fields[k]
+    #     if k not in user_parameters.keys():
+    #         user_parameters[k] = ''
+    for k in config_fields.keys():      # 检查非空字段是否上传
+        if 'CONSTRAINT' in config_fields[k].keys():
+            if 'NULL' in config_fields[k]['CONSTRAINT'].keys() and config_fields[k]['CONSTRAINT']['NULL'] == 0:
+                if k in reverse_alias_fields.keys():
+                    k = reverse_alias_fields[k]
+                if k not in user_parameters.keys():
+                    return False, '字段(%s)不可为空' % k
+    for k in user_parameters.keys():                # 传入参数为空检查
+        if k in config_fields.keys():
+            pre_k = k
+            if not config_fields[k.upper()]:
+                config_fields[k.upper()] = {}
+            if 'CONSTRAINT' in config_fields[k.upper()].keys():
+                if 'NULL' in config_fields[k.upper()]['CONSTRAINT'].keys():
+                    if 'ALIAS' in config_fields[k.upper()]['CONSTRAINT'].keys():
+                        if config_fields[k.upper()]['CONSTRAINT']['ALIAS'] == 1:
+                            if config_fields[k.upper()]['CONSTRAINT']['NULL'] == 0 and not user_parameters[pre_k]:
+                                return False, '字段(%s)不可为空' % k
+                    else:
+                        if config_fields[k.upper()]['CONSTRAINT']['NULL'] == 0 and not user_parameters[k]:
+                            return False, '字段(%s)不可为空' % k
+    return True, ""
 
