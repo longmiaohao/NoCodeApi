@@ -12,6 +12,7 @@ config = ConfigParser()
 config.read(os.path.join(settings.BASE_DIR, "apigate", 'conf', 'api_conf.ini'), encoding='UTF-8')
 SECRET_KEY = config["SECRET_KEY"]["key"]
 db_path = config["DB_PATH"]["path"]
+redis_config = config["REDIS"]
 
 
 def quote_generate(quote_num):
@@ -309,4 +310,29 @@ def sort_for_sql(config_sort, user_sort):
         return sort_str[:-1], sort_key
     else:
         return '', []
+
+
+def check_call_frequency(api_name, per_min=9999):
+    """
+        检测调用频率 频率合理 True 超过 False
+    """
+    import redis
+    redis_key = 'frequency_' + api_name
+    r = None
+    if not redis_config['password']:
+        r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']))
+    else:
+        r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']),
+                              password=redis_config['password'])
+    query_frequency = r.get(redis_key)
+    if not query_frequency:     # 查询是否已经存在调用 没有则设置调用过期
+        r.set(redis_key, 1)
+        r.expire(redis_key, 60)
+        return True
+    else:
+        if int(query_frequency) >= int(per_min):
+            return False
+        else:
+            r.set(redis_key, int(query_frequency) + 1)
+            return True
 

@@ -94,6 +94,32 @@ class DB:
             print(str(e))
             return False
 
+    def connection_pg(self):
+        try:
+            import psycopg2
+            self.__con = psycopg2.connect(host=self.__host, user=self.__username, password=self.__password,
+                                          database=self.__sid, port=self.__port)
+            self.__cursor = self.__con.cursor()
+            return self.__cursor
+        except Exception as e:
+            warnings.warn("Postgresql数据库: 连接失败\n" + str(e))
+            self.err = str(e)
+            print(str(e))
+            return False
+
+    def connection_clickhouse(self):
+        try:
+            from clickhouse_driver import Client, connect
+            self.__con = connect(host=self.__host, user=self.__username, password=self.__password,
+                                 database=self.__sid, port=self.__port,  send_receive_timeout=60)
+            self.__cursor = self.__con.cursor()
+            return self.__cursor
+        except Exception as e:
+            warnings.warn("Postgresql数据库: 连接失败\n" + str(e))
+            self.err = str(e)
+            print(str(e))
+            return False
+
     def connection_sqlite3(self):
         try:
             import sqlite3  # sqllite3数据库
@@ -220,13 +246,22 @@ class DB:
         self.auto_commit = False
 
     def rollback(self):
-        self.__con.rollback()
+        try:
+            self.__con.rollback()
+            return True
+        except Exception as e:
+            self.err = str(e)
+            warnings.warn(str(e))
+            return False
 
     def commit(self):
-        if not self.__db_path:
-            self.__cursor.execute('commit')
-        else:
+        try:
             self.__con.commit()
+            return True
+        except Exception as e:
+            self.err = str(e)
+            warnings.warn(str(e))
+            return False
 
     def __del__(self):
         try:

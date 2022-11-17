@@ -3,7 +3,7 @@ from apigate.main.db.base.Constructor import insert_PreSQL_construct, select_tem
     update_PreSQL_construct, delete_PreSQL_construct, bind_builtin_values
 from apigate.main.db.base.DBBehavor import connect_db, construct_get_table_fields_SQL, DB_ERRORS
 from apigate.main.db.base.ToolFunction import check_ip_valid, context_construct, check_call_method_valid, \
-    query_field_check, parameters_vail, get_return_fields, condition_generate, sort_for_sql
+    query_field_check, parameters_vail, get_return_fields, condition_generate, sort_for_sql, check_call_frequency
 from configparser import ConfigParser
 from utils.DB import *
 from django.http import JsonResponse
@@ -25,6 +25,29 @@ def filterDecorator(func):
     def inner(*args, **kwargs):
         request = args[0]
         api_name = args[1].split('/')[0]
+        c = context_construct(request, api_name)
+        if c['err']:
+            return JsonResponse({"RTN_CODE": '00', "RTN_MSG": c['err']},
+                                json_dumps_params={'ensure_ascii': False})  # 上下文错误
+        setattr(request, 'api_context', c)
+        db_config = c['config']
+        # 检测接口频率限制
+        if not check_call_frequency(api_name, 3):
+            return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "调用频繁, 请稍后再试"},
+                                json_dumps_params={'ensure_ascii': False})  # 调用频繁截断
+        # 获取接口组装参数
+        if not db_config:
+            return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "该接口未启用或不存在"},
+                                json_dumps_params={'ensure_ascii': False})  # 接口不存在
+        # 检查IP合法性
+        if not check_ip_valid(c['ip'], db_config['ALLOW_IP'].split(',')):
+            return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "IP限制, 禁止访问"},
+                                json_dumps_params={'ensure_ascii': False})  # IP限制
+        # 检查调用方法合法性
+        if not check_call_method_valid(c['method'], db_config['ALLOW_METHOD'].split(',')):
+            return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "调用方法限制, 禁止访问"},
+                                json_dumps_params={'ensure_ascii': False})  # 调用方法限制
+
         module_name = 'apigate.filters.' + api_name  # 模块名的字符串
         __class = None
         try:
@@ -51,20 +74,8 @@ def index(request, path):
     :param path:
     :return:
     """
-    c = context_construct(request, path)
-    if c['err']:
-        return JsonResponse({"RTN_CODE": '00', "RTN_MSG": c['err']},
-                            json_dumps_params={'ensure_ascii': False})  # 上下文错误
+    c = request.api_context
     db_config = c['config']
-    # 获取接口组装参数
-    if not db_config:
-        return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "该接口未启用或不存在"}, json_dumps_params={'ensure_ascii': False})  # 接口不存在
-    # 检查IP合法性
-    if not check_ip_valid(c['ip'], db_config['ALLOW_IP'].split(',')):
-        return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "IP限制, 禁止访问"}, json_dumps_params={'ensure_ascii': False})  # IP限制
-    # 检查调用方法合法性
-    if not check_call_method_valid(c['method'], db_config['ALLOW_METHOD'].split(',')):
-        return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "调用方法限制, 禁止访问"}, json_dumps_params={'ensure_ascii': False})  # 调用方法限制
     # 数据库连接参数
     db_type = db_config['TYPE']                                             # 数据库类型
     host = db_config['IP']                                                  # 数据库IP
