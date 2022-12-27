@@ -4,7 +4,7 @@ from apigate.main.db.base.Constructor import insert_PreSQL_construct, select_tem
 from apigate.main.db.base.DBBehavor import connect_db, construct_get_table_fields_SQL, DB_ERRORS
 from apigate.main.db.base.ToolFunction import check_ip_valid, context_construct, check_call_method_valid, \
     query_field_check, parameters_vail, get_return_fields, condition_generate, sort_for_sql, check_call_frequency, \
-    constraint_check, update_fields_constraint_check
+    constraint_check, update_fields_constraint_check, default_parameters_inject
 from configparser import ConfigParser
 from utils.DB import *
 from django.http import JsonResponse
@@ -150,6 +150,10 @@ def index(request, path):
             check, err_msg = constraint_check(c['parameters'], db_config['INSERT_FIELDS'], alias_fields)
             if not check:  # 约束校验
                 return JsonResponse({"RTN_CODE": '00', "RTN_MSG": err_msg}, json_dumps_params={'ensure_ascii': False})
+            c['parameters'], err_msg = default_parameters_inject(c['parameters'], db_config['INSERT_FIELDS'],
+                                                                 c['builtin_values'], op_type='I')  # 默认参数注入
+            if err_msg:
+                return JsonResponse({"RTN_CODE": '00', "RTN_MSG": err_msg}, json_dumps_params={'ensure_ascii': False})
             pre_sql, pre_sql_values = insert_PreSQL_construct(c['parameters'], alias_fields, target_table_or_view)
             msg = "新增成功"
         if c['op'] == "DELETE":      # 删除SQL拼接
@@ -162,6 +166,10 @@ def index(request, path):
                                     json_dumps_params={'ensure_ascii': False})
             check, err_msg = constraint_check(c['parameters'], db_config['DELETE_FIELDS'], alias_fields)
             if not check:  # 约束校验
+                return JsonResponse({"RTN_CODE": '00', "RTN_MSG": err_msg}, json_dumps_params={'ensure_ascii': False})
+            c['parameters'], err_msg = default_parameters_inject(c['parameters'], db_config['DELETE_FIELDS'],
+                                                                 c['builtin_values'], op_type='D')
+            if err_msg:
                 return JsonResponse({"RTN_CODE": '00', "RTN_MSG": err_msg}, json_dumps_params={'ensure_ascii': False})
             pre_sql, pre_sql_values = delete_PreSQL_construct(c['parameters'], db_config['DELETE_FIELDS'], alias_fields,
                                                               target_table_or_view)
@@ -185,6 +193,10 @@ def index(request, path):
             check, err_msg = constraint_check(c['parameters'], db_config['UPDATE_FIELDS']["CONDITION_FIELDS"], alias_fields)
             if not check:  # 检查条件约束
                 return JsonResponse({"RTN_CODE": '00', "RTN_MSG": "条件：" + err_msg}, json_dumps_params={'ensure_ascii': False})
+            c['parameters'], err_msg = default_parameters_inject(c['parameters'], db_config['UPDATE_FIELDS'],
+                                                                 c['builtin_values'], op_type='U')
+            if err_msg:
+                return JsonResponse({"RTN_CODE": '00', "RTN_MSG": err_msg}, json_dumps_params={'ensure_ascii': False})
             pre_sql, pre_sql_values = update_PreSQL_construct(c['parameters'],
                                                               db_config['UPDATE_FIELDS']['UPDATE_FIELDS'],
                                                               db_config['UPDATE_FIELDS']["CONDITION_FIELDS"],

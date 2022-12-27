@@ -412,3 +412,43 @@ def update_fields_constraint_check(user_parameters, config_fields, alias_fields)
                             return False, '字段(%s)不可为空' % k
     return True, ""
 
+
+def default_parameters_inject(parameters, rule_config, builtin_value, op_type='I'):
+    """
+    增删改默认参数注入
+    :return:
+    """
+    if op_type == 'I' or op_type == 'D':
+        for key in rule_config.keys():
+            if 'DEFAULT' in rule_config[key]:
+                default_val = rule_config[key]['DEFAULT']
+                builtin_key = re.findall(r'\{\{.*\}\}', default_val)  # 提取模版变量
+                if builtin_key:  # 检测到是内置变量
+                    builtin_key = builtin_key[0].replace(' ', '').replace('{', '').replace('}', '').lower()
+                    if builtin_key not in builtin_value.keys():
+                        builtin_key = builtin_key.upper()
+                        if builtin_key not in builtin_value.keys():
+                            return False, "配置错误，名为`%s`的内置变量不存在" % builtin_key
+                    else:
+                        parameters[key] = builtin_value[builtin_key]
+                else:  # 默认为大写常量
+                    parameters[key] = default_val
+        return parameters, ''
+    elif op_type == 'U':
+        for field in rule_config.keys():
+            for key in rule_config[field].keys():
+                if 'DEFAULT' in rule_config[field][key]:
+                    default_val = rule_config[field][key]['DEFAULT']
+                    builtin_key = re.findall(r'\{\{.*\}\}', default_val)  # 提取模版变量
+                    if builtin_key:  # 检测到是内置变量
+                        builtin_key = builtin_key[0].replace(' ', '').replace('{', '').replace('}', '').lower()
+                        if builtin_key not in builtin_value.keys():
+                            return False, "配置错误名为`%s`的内置变量不存在" % builtin_key
+                        else:
+                            parameters[key] = builtin_value[builtin_key]
+                    else:  # 默认为大写常量
+                        parameters[key] = builtin_key
+        return parameters, ''
+    else:
+        return False, '不合法调用函数(default_parameters_inject)'
+
