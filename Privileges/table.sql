@@ -34,7 +34,7 @@ create table ROLE
         primary key,
     NAME        varchar(20)                          not null comment '角色名称',
     CREATE_USER varchar(20)                          not null comment '创建人',
-    CREATE_TIME datetime default current_timestamp() not null comment '创建时间',
+    CREATE_TIME timestamp default now() not null comment '创建时间',
     constraint ROLE_NAME_uindex
         unique (NAME)
 )
@@ -48,7 +48,7 @@ create table ROLE_API_PRIVILEGES
     API_ID      int                                  not null comment 'API编号',
     API_TYPE    char                                 not null comment 'api类型增I 改U 删D 查S',
     GRANT_USER  varchar(50)                          null,
-    CREATE_TIME datetime default current_timestamp() null comment '创建时间'
+    CREATE_TIME timestamp default now() null comment '创建时间'
 )
     comment '角色API权限';
 
@@ -58,7 +58,7 @@ create table ROLE_MENU_PRIVILEGES
     ROLE_ID     int                                  not null comment '角色ID',
     MENU_ID     int                                  not null comment '菜单编号',
     GRANT_USER  varchar(50)                          null comment '创建用户',
-    CREATE_TIME datetime default current_timestamp() not null
+    CREATE_TIME timestamp default now() not null
 )
     comment '角色菜单权限';
 
@@ -70,7 +70,7 @@ create table SYSLOG
     PATH      varchar(100)                            null comment '访问路径',
     OPERATION varchar(10)                             not null comment '操作',
     IP        varchar(16)                             not null comment 'IP地址',
-    DATE      datetime    default current_timestamp() null
+    DATE      timestamp    default now() null
 )
     comment '系统日志';
 
@@ -82,7 +82,7 @@ create table USER_API_PRIVILEGES
     API_ID      int                                  not null comment 'API编号',
     API_TYPE    char                                 not null comment 'api类型增I 改U 删D 查S',
     GRANT_USER  varchar(50)                          null comment '授权用户',
-    CREATE_TIME datetime default current_timestamp() null
+    CREATE_TIME timestamp default now() null
 )
     comment '用户API权限表';
 
@@ -91,7 +91,7 @@ create table USER_MENU_PRIVILEGES
 (
     USERNAME    varchar(100)                         not null,
     MENU_ID     int                                  not null comment '菜单编号',
-    CREATE_TIME datetime default current_timestamp() null,
+    CREATE_TIME timestamp default now() null,
     GRANT_USER  varchar(50)                          null comment '授权用户'
 )
     comment '用户菜单权限表';
@@ -102,7 +102,7 @@ create table USER_ROLE
     USERNAME    varchar(100)                         not null comment '用户名',
     ROLE_ID     int                                  not null comment '角色ID',
     CREATE_USER varchar(50)                          null comment '创建用户',
-    CREATE_TIME datetime default current_timestamp() not null
+    CREATE_TIME timestamp default now() not null
 )
     comment '用户角色';
 
@@ -113,7 +113,7 @@ create table USERS
     PASSWORD    varchar(128)                         not null comment '密码',
     NAME        varchar(20) charset utf8             not null comment '姓名',
     DEPARTMENT  varchar(20) charset utf8             null comment '单位名称',
-    CREATE_TIME datetime default current_timestamp() null comment '添加时间',
+    CREATE_TIME timestamp default now() null comment '添加时间',
     CREATE_USER varchar(50)                          null comment '创建用户',
     IS_ACTIVE   char     default '1'                 not null comment '是否启用 1 启用 0禁用',
     constraint T_MJ_YH_SFRZH_uindex

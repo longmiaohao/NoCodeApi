@@ -15,7 +15,7 @@ import importlib
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 config = ConfigParser()
 # # 传入读取文件的地址，encoding文件编码格式，中文必须
-config.read(os.path.join(settings.BASE_DIR, "apigate", 'conf', 'api_conf.ini'), encoding='UTF-8')  # 当前工程下面 conf文件夹的script.ini
+config.read(os.path.join(settings.BASE_DIR, "apigate", 'conf', 'api_conf.ini'), encoding='UTF-8')   # 当前工程下面 conf文件夹的script.ini
 SECRET_KEY = config["SECRET_KEY"]["key"]
 db_path = config["DB_PATH"]["path"]
 debug = True

@@ -132,7 +132,17 @@ def get_config(path):
     获取接口配置信息
     :return:
     """
-    sql = "select a.URL, a.ALLOW_METHOD, a.ALLOW_IP,a.TARGET_TABLE_OR_VIEW, a.EXECUTE_SQL, a.PER_PAGE, " \
+    import redis
+    redis_key = 'api_config_' + path
+    if not redis_config['password']:
+        r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']))
+    else:
+        r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']),
+                              password=redis_config['password'])
+    api_config = r.get(redis_key)
+    if api_config:
+        return json.loads(api_config)
+    sql = "select a.NAME, a.URL, a.ALLOW_METHOD, a.ALLOW_IP,a.TARGET_TABLE_OR_VIEW, a.EXECUTE_SQL, a.PER_PAGE, " \
           "a.RETURN_TARGET_TABLE_OR_VIEW, a.STATUS API_STATUS, a.RETURN_FIELD, a.SORT, a.CONDITION, a.ALIAS_FIELDS," \
           "a.INSERT_STATUS, a.DELETE_STATUS, a.UPDATE_STATUS, a.INSERT_FIELDS, a.DELETE_FIELDS, a.UPDATE_FIELDS," \
           "a.RETURN_FIELDS,a.RETURN_TOTAL, b.TYPE, b.DB, b.IP," \
@@ -151,6 +161,8 @@ def get_config(path):
         config_data['SORT'] = json.loads(config_data['SORT']) if config_data['SORT'] else {}
         config_data["RETURN_FIELDS"] = json.loads(config_data["RETURN_FIELDS"]) if config_data["RETURN_FIELDS"] else {}
         config_data['PAGE_KEY'] = 'PAGE'
+    r.set(redis_key, json.dumps(config_data))
+    r.expire(redis_key, 3600)
     return config_data
 
 
