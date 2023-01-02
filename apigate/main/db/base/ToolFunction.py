@@ -135,12 +135,12 @@ def get_config(path):
     import redis
     redis_key = 'api_config_' + path
     if not redis_config['password']:
-        r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']))
+        r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']), decode_responses=True)
     else:
         r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']),
-                              password=redis_config['password'])
+                              password=redis_config['password'], decode_responses=True)
     api_config = r.get(redis_key)
-    if api_config:
+    if api_config != 'null':
         return json.loads(api_config)
     sql = "select a.NAME, a.URL, a.ALLOW_METHOD, a.ALLOW_IP,a.TARGET_TABLE_OR_VIEW, a.EXECUTE_SQL, a.PER_PAGE, " \
           "a.RETURN_TARGET_TABLE_OR_VIEW, a.STATUS API_STATUS, a.RETURN_FIELD, a.SORT, a.CONDITION, a.ALIAS_FIELDS," \
