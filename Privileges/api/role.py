@@ -49,7 +49,7 @@ def update_role(role_id=None, role_name=None, db='default'):
     :return:
     """
     rawsql = RawSql(db)
-    sql = "update ROLE set NAME='%s' where role_id=%s"
+    sql = "update ROLE set NAME=%s where role_id=%s"
     if rawsql.execute(sql, (role_name, role_id)):
         return True
     else:
