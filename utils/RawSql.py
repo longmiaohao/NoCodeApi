@@ -94,7 +94,7 @@ class RawSql:
         if isinstance(value, datetime.time):
             return str(value)
         if isinstance(value, decimal.Decimal):
-            float_val = re.search(r'\d*\.\d+', str(value))
+            float_val = re.search(r'[-,+]?\d*\.\d+', str(value))
             if float_val:
                 return float(float_val.group(0))
             else:
