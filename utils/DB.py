@@ -45,6 +45,7 @@ class DB:
         self.__cursor = ""
         self.err = ""
         self.auto_commit = True
+        self.db_type = None
 
     def connection_oracle(self):
 
@@ -58,6 +59,7 @@ class DB:
             self.__con = cx.connect(self.__username, self.__password,
                                     self.__host + ':' + str(self.__port) + '/' + self.__sid)
             self.__cursor = self.__con.cursor()
+            self.db_type = 'oracle'
             return self.__cursor
         except Exception as e:
             warnings.warn("Oracle数据库: " + self.__host + ":" + str(self.__port) + " 连接失败\n" + str(e))
@@ -135,6 +137,11 @@ class DB:
     def get_json(self, sql='', parameters=None, blob=False):
         try:
             if parameters:
+                if self.db_type == "oracle":
+                    i = 1
+                    while re.search('%s', sql):
+                        sql = re.sub('%s', ':%s' % i, sql, 1)
+                        i += 1
                 self.__cursor.execute(sql, parameters)
             else:
                 self.__cursor.execute(sql)
@@ -157,11 +164,22 @@ class DB:
             timedelta = re.search(r'datetime.timedelta\(.*\)', str(row))
             decimal_val = re.search(r'Decimal\(.*\)', str(row))
             double_quote = re.search(r'{\"', str(row))
-            if checkpoint or timedelta or double_quote or decimal_val:
+            double_quote_list = re.search(r'\[\"', str(row))
+            if checkpoint or timedelta or double_quote or decimal_val or double_quote_list:
                 lists.append(dict(zip(columns, [self.type_analyst(var) for var in row])))
             else:
                 lists.append(dict(zip(columns, row)))
         result = str(lists).replace('\'', '"')
+        result = result.replace('"', '\\"')
+        result = result.replace('{\\"', '{"')
+        result = result.replace(': \\"', ': "')
+        result = result.replace('\\":', '":')
+        result = result.replace('\\",', '",')
+        result = result.replace(',\\"', ',"')
+        result = result.replace('\\"}', '"}')
+        result = result.replace(', \\"', ', "')
+        result = result.replace(': [\\"', ': ["')
+        result = result.replace('\\"],', '"],')
         result = result.replace('None', '""')
         return result
 
@@ -179,6 +197,8 @@ class DB:
             else:
                 return int(value)
         if re.search(r'{\"', str(value)):
+            return json.loads(value)
+        if re.search(r'\[\"', str(value)):
             return json.loads(value)
         else:
             return value

@@ -76,21 +76,21 @@ def ApiConfig(request):
         try:
             if sort:
                 json.loads(sort)
-                sort = sort.replace('"', '\\"').upper()
+                sort = sort.upper()
         except:
             return JsonResponse({"RTN_CODE": 0, "RTN_MSG": "排序JSON校验不通过"})
         condition = request.POST.get("condition")
         try:
             if condition:
                 json.loads(condition)
-                condition = condition.replace('"', '\\"').upper()
+                condition = condition.upper()
         except:
             return JsonResponse({"RTN_CODE": 0, "RTN_MSG": "条件JSON校验不通过"})
         alias_fields = request.POST.get("alias_fields")
         try:
             if alias_fields:
                 json.loads(alias_fields)
-                alias_fields = alias_fields.replace('"', '\\"').upper()
+                alias_fields = alias_fields.upper()
         except:
             return JsonResponse({"RTN_CODE": 0, "RTN_MSG": "字段别名JSON校验不通过"})
 
@@ -98,7 +98,7 @@ def ApiConfig(request):
         try:
             if insert_fields:
                 json.loads(insert_fields)
-                insert_fields = insert_fields.replace('"', '\\"').upper()
+                insert_fields = insert_fields.upper()
         except:
             return JsonResponse({"RTN_CODE": 0, "RTN_MSG": "插入字段JSON校验不通过"})
 
@@ -106,21 +106,21 @@ def ApiConfig(request):
         try:
             if delete_fields:
                 json.loads(delete_fields)
-                delete_fields = delete_fields.replace('"', '\\"').upper()
+                delete_fields = delete_fields.upper()
         except:
             return JsonResponse({"RTN_CODE": 0, "RTN_MSG": "删除字段JSON校验不通过"})
         update_fields = request.POST.get("update_fields")
         try:
             if update_fields:
                 json.loads(update_fields)
-                update_fields = update_fields.replace('"', '\\"').upper()
+                update_fields = update_fields.replace('"', '"').upper()
         except:
             return JsonResponse({"RTN_CODE": 0, "RTN_MSG": "更新字段JSON校验不通过"})
         return_fields = request.POST.get("return_fields")
         try:
             if return_fields:
                 json.loads(return_fields)
-                return_fields = return_fields.replace('"', '\\"').upper()
+                return_fields = return_fields.upper()
         except:
             return JsonResponse({"RTN_CODE": 0, "RTN_MSG": "返回字段JSON校验不通过"})
         if sql:
@@ -209,7 +209,7 @@ def ApiList(request):
               "PER_PAGE,RETURN_FIELDS, RETURN_TOTAL from T_API_CONFIG"
         db_list = sqlite3_db.get_json(sql)
     if db_list:
-        db_list = json.loads(db_list.replace('\\\\', '\\').replace('""""', '"{}"'))
+        db_list = json.loads(db_list)
     else:
         db_list = []
     if sqlite3_db.err:

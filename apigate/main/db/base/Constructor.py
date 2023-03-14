@@ -134,3 +134,18 @@ def bind_builtin_values(presql, builtin_value):
         return presql, None
     else:
         return presql, None
+
+
+def page_Presql_construct(sql, db_type, limit, offset):
+    """
+    分页sql生成
+    :param sql:
+    :param db_type:
+    :return:
+    """
+    if db_type == 'Mysql':
+        sql += ' LIMIT %s OFFSET %s'
+    elif db_type == 'Oracle':
+        sql = "(select * from (%s) WHERE ROWNUM <= %%s) MINUS (select * from (%s) WHERE ROWNUM <= %%s)" % (sql, sql)
+        limit = offset + limit
+    return sql, [limit, offset]

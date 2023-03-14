@@ -135,12 +135,13 @@ def get_config(path):
     import redis
     redis_key = 'api_config_' + path
     if not redis_config['password']:
-        r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']), decode_responses=True)
+        r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']),
+                              decode_responses=True)
     else:
         r = redis.StrictRedis(host=redis_config['host'], port=int(redis_config['port']), db=int(redis_config['db']),
                               password=redis_config['password'], decode_responses=True)
     api_config = r.get(redis_key)
-    if api_config != 'null':
+    if api_config != 'null' and api_config:
         return json.loads(api_config)
     sql = "select a.NAME, a.URL, a.ALLOW_METHOD, a.ALLOW_IP,a.TARGET_TABLE_OR_VIEW, a.EXECUTE_SQL, a.PER_PAGE, " \
           "a.RETURN_TARGET_TABLE_OR_VIEW, a.STATUS API_STATUS, a.RETURN_FIELD, a.SORT, a.CONDITION, a.ALIAS_FIELDS," \
@@ -152,17 +153,18 @@ def get_config(path):
     sqlite3_db.connection_sqlite3()
     config_data = sqlite3_db.get_json(sql)
     if config_data:
-        config_data = json.loads(config_data.replace("\\\\", "\\"))[0]
-        config_data['INSERT_FIELDS'] = json.loads(config_data['INSERT_FIELDS']) if config_data['INSERT_FIELDS'] else {}
-        config_data['DELETE_FIELDS'] = json.loads(config_data['DELETE_FIELDS']) if config_data['DELETE_FIELDS'] else {}
-        config_data['UPDATE_FIELDS'] = json.loads(config_data['UPDATE_FIELDS']) if config_data['UPDATE_FIELDS'] else {}
-        config_data['ALIAS_FIELDS'] = json.loads(config_data['ALIAS_FIELDS']) if config_data['ALIAS_FIELDS'] else {}
-        config_data['CONDITION'] = json.loads(config_data['CONDITION']) if config_data['CONDITION'] else {}
-        config_data['SORT'] = json.loads(config_data['SORT']) if config_data['SORT'] else {}
-        config_data["RETURN_FIELDS"] = json.loads(config_data["RETURN_FIELDS"]) if config_data["RETURN_FIELDS"] else {}
+        config_data = json.loads(config_data)[0]
+        config_data['INSERT_FIELDS'] = config_data['INSERT_FIELDS'] if config_data['INSERT_FIELDS'] else {}
+        config_data['DELETE_FIELDS'] = config_data['DELETE_FIELDS'] if config_data['DELETE_FIELDS'] else {}
+        config_data['UPDATE_FIELDS'] = config_data['UPDATE_FIELDS'] if config_data['UPDATE_FIELDS'] else {}
+        config_data['ALIAS_FIELDS'] = config_data['ALIAS_FIELDS'] if config_data['ALIAS_FIELDS'] else {}
+        config_data['CONDITION'] = config_data['CONDITION'] if config_data['CONDITION'] else {}
+        config_data['SORT'] = config_data['SORT'] if config_data['SORT'] else {}
+        config_data["RETURN_FIELDS"] = config_data["RETURN_FIELDS"] if config_data["RETURN_FIELDS"] else {}
         config_data['PAGE_KEY'] = 'PAGE'
-    r.set(redis_key, json.dumps(config_data))
-    r.expire(redis_key, 3600)
+    if not settings.DEBUG:
+        r.set(redis_key, json.dumps(config_data))
+        r.expire(redis_key, 3600)
     return config_data
 
 

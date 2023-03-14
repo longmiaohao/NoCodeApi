@@ -1,6 +1,6 @@
 from django.conf import settings
 from apigate.main.db.base.Constructor import insert_PreSQL_construct, select_template_PreSQL_construct, \
-    update_PreSQL_construct, delete_PreSQL_construct, bind_builtin_values
+    update_PreSQL_construct, delete_PreSQL_construct, bind_builtin_values, page_Presql_construct
 from apigate.main.db.base.DBBehavor import connect_db, construct_get_table_fields_SQL, DB_ERRORS
 from apigate.main.db.base.ToolFunction import check_ip_valid, context_construct, check_call_method_valid, \
     query_field_check, parameters_vail, get_return_fields, condition_generate, sort_for_sql, check_call_frequency, \
@@ -266,8 +266,8 @@ def index(request, path):
                     pre_sql += sql
                     pre_sql_values += value
                 if per_page != 'ALL':  # 分页接口
-                    pre_sql += ' LIMIT %s OFFSET %s'
-                    pre_sql_values.extend([int(c['limit']), int(c['offset'])])
+                    pre_sql, page_values = page_Presql_construct(pre_sql, db_type, int(c['limit']), int(c['offset']))
+                    pre_sql_values.extend(page_values)
             data = db.get_json(pre_sql, pre_sql_values)
             res_data["DATA"] = json.loads(data) if data else []         # 返回None
             if db.err:
@@ -286,10 +286,19 @@ def index(request, path):
                 pre_sql += sql
                 pre_sql_values += value
             if per_page != 'ALL':        # 分页接口
-                pre_sql += ' LIMIT %s OFFSET %s'
-                pre_sql_values.extend([int(c['limit']), int(c['offset'])])
+                pre_sql, page_values = page_Presql_construct(pre_sql, db_type, int(c['limit']), int(c['offset']))
+                pre_sql_values.extend(page_values)
             data = db.get_json(pre_sql.replace("'%'", "'%%'"), pre_sql_values)     # 返回目标表
-            res_data["DATA"] = json.loads(data) if data else []
+            if debug:
+                res_data["DATA"] = json.loads(data) if data else []
+            else:
+                try:
+                    res_data["DATA"] = json.loads(data) if data else []
+                except:
+                    res_data["DATA"] = []
+                    err_msg = '数据非标准JSON，解析失败'
+                    return JsonResponse({"RTN_CODE": "00", "RTN_MSG": err_msg}, json_dumps_params={'ensure_ascii': False})
+
             if db.err:
                 if debug:
                     err_msg = db.err

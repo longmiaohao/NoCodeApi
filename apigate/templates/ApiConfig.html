@@ -498,7 +498,7 @@
                 $("#sort").val(res.SORT)
                 {#$("#condition").val(JSON.stringify(JSON.parse(res.CONDITION), null, 2));#}
                 if (res.CONDITION != '')
-                    editor_condition.set(JSON.parse(res.CONDITION));
+                    editor_condition.set(res.CONDITION);
                 else
                     editor_condition.set({});
                 {#$('#condition').jsonEditor(res.CONDITION, { change: function (rdata) {$('#condition').val(JSON.stringify($("#condition").val())); }});　　#}
@@ -507,7 +507,7 @@
                 $("#insert_field").val(res.INSERT_FIELDS)
                 $("#delete_field").val(res.DELETE_FIELDS)
                 if (res.UPDATE_FIELDS != '')
-                    editor_update_field.set(JSON.parse(res.UPDATE_FIELDS));
+                    editor_update_field.set(res.UPDATE_FIELDS);
                 else
                     editor_update_field.set({});
                 $("#return_fields").val(res.RETURN_FIELDS)

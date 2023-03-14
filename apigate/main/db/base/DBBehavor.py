@@ -50,6 +50,7 @@ def construct_get_table_fields_SQL(db_name, table, db_type="Mysql"):
         return '*'
     return sql_construct[db_type.upper()]
 
+
 def DB_ERRORS(db_type, error):
     """
     数据库错误表
@@ -59,6 +60,10 @@ def DB_ERRORS(db_type, error):
         code = error[0]
         msg = error[1]
         errors = {1054: "表字段(%s)不存在" % msg.split(' ')[2]}
+        return errors[code]
+    elif db_type == 'ORACLE':
+        code = error.split(':')[0]
+        errors = {'ORA-00904': "表字段(%s)不存在" % error.split(':')[1]}
         return errors[code]
     else:
         return "unknown error"
