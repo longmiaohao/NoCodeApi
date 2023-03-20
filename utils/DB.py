@@ -75,7 +75,7 @@ class DB:
         #             "uid=%s;pwd=%s" % (self.__host, self.__sid, self.__username, self.__password))
         try:
             import pymssql  # sqlserver数据库驱动 linux平台需要装freetsd依赖
-            self.__con = pymssql.connect(host=self.__host, user=self.__username, password=self.__password, db=self.__sid, port=self.__port, charset='utf8')
+            self.__con = pymssql.connect(server=self.__host, user=self.__username, password=self.__password, database=self.__sid, port=self.__port, charset='utf8')
             self.__cursor = self.__con.cursor()
             return self.__cursor
         except Exception as e:
